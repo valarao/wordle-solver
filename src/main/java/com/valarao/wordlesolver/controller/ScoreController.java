@@ -1,6 +1,7 @@
 package com.valarao.wordlesolver.controller;
 
 import com.valarao.wordlesolver.calculator.ScoreCalculator;
+import com.valarao.wordlesolver.loader.WordDatasetLoader;
 import com.valarao.wordlesolver.model.CalculateInformationScoresRequest;
 import com.valarao.wordlesolver.model.CalculateInformationScoresResponse;
 import com.valarao.wordlesolver.model.PastGuess;
@@ -27,6 +28,10 @@ public class ScoreController {
 
     @Autowired
     @NonNull
+    private final WordDatasetLoader wordDatasetLoader;
+
+    @Autowired
+    @NonNull
     private final ScoreCalculator<PredictiveScore> predictiveScoreCalculator;
 
     @Autowired
@@ -41,10 +46,11 @@ public class ScoreController {
     @PostMapping("/scores")
     public CalculateInformationScoresResponse calculateInformationScores(
             @RequestBody CalculateInformationScoresRequest request) {
+        List<String> allWords = wordDatasetLoader.load();
         List<PastGuess> guesses = request.getGuesses();
         return CalculateInformationScoresResponse.builder()
-                .predictiveScores(predictiveScoreCalculator.calculate(guesses))
-                .retrospectiveScores(retrospectiveScoreCalculator.calculate(guesses))
+                .predictiveScores(predictiveScoreCalculator.calculate(allWords, guesses))
+                .retrospectiveScores(retrospectiveScoreCalculator.calculate(allWords, guesses))
                 .build();
     }
 }
