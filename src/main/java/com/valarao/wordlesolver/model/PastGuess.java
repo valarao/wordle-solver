@@ -16,6 +16,6 @@ public class PastGuess {
     @JsonProperty("guessWord")
     String guessWord;
 
-    @JsonProperty("correctness")
-    List<LetterCorrectness> correctness;
+    @JsonProperty("wordCorrectness")
+    List<LetterCorrectness> wordCorrectness;
 }
