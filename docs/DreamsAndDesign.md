@@ -134,26 +134,51 @@ The right-hand side will contain a scrollable list of recommended guesses sorted
 I plan to develop a single endpoint: `POST /api/entropy-scores`
 
 **Input** 
-**previousGuesses**: List of previous guesses. This list is necessary to calculate conditional entropy scores.
+- **guesses**: List of guesses taken with their validation pattern. This list is necessary to calculate conditional entropy scores.
+   - WW: Wrong Letter, Wrong Position
+   - RW: Right Letter, Wrong Position
+   - RR: Right Letter, Right Position
 
-*Sample Request*
+*Sample Request Body*
 ```
-
-curl  --digest -H 'Content-Type: application/json' -X POST -d '["ADIEU", "CRANE"]' https://<server-url>/api/entropy-scores
+{
+  "guesses": [
+      {
+         "guess": "ADIEU",
+         "correctness": ["WW", "RW", "RR", "RR", "RR"]
+      },
+      {
+          "guess": "CRANE",
+          "correctness": ["RR", "RW", "RR", "RR", "RR"]
+      }
+  ]
+}
 ```
 
 **Output**
-**updatedEntropies**: Result containing an array updated entropies for all valid guesses. Valid guesses that violate constraints based on previous guesses would be defaulted with an entropy score of 0.
+- **entropyScores**: Dictionary of updated entropies for all valid guesses. Valid guesses that violate constraints based on previous guesses would not be included.
+- **information**: List of objects comparing entropy score with actual information bits received.
 
-*Sample Result*
+*Sample Response Body*
 ```
 {
-  "result": [{
+  "entropyScores": {
     "DRILL": 6.54,
     "EAGER": 5.35,
     "TWIRL": 4.31,
     ...
-    "SPEED": 0.00,
+    "SPEED": 0.01,
+  },
+  "information": [{
+    "guess": "ADIEU",
+    "entropyScore": "4.56"
+    "informationBits": "5.63",
+    "correctness": ["WW", "RW", "RR", "RR", "RR"]
+  }, {
+    "guess": "CRANE",
+    "entropyScore": "3.16"
+    "informationBits": "2.63",
+    "correctness": ["RR", "RW", "RR", "RR", "RR"]
   }]
 }
 ```
@@ -184,7 +209,7 @@ We can define the two DynamoDB schemas: one to cache entropy values and another 
 - **`Guess` (partition key) - string**: Word to guess.
 - **`PreviousGuess` (sort key) - stringset**: Previous guess made with information resulting from each guess.
    - WW: Wrong Letter, Wrong Position
-   - WR: Right Letter, Wrong Position
+   - RW: Right Letter, Wrong Position
    - RR: Right Letter, Right Position
 - **`Level` (attribute) - number**: Level of the guess (1st guess or 2nd guess)
 - **`Entropy` (attribute) - number**: Entropy score of the guess word.
@@ -193,7 +218,7 @@ We can define the two DynamoDB schemas: one to cache entropy values and another 
 | Guess    | PreviousGuess                           | Level | Entropy |
 | -------- | --------------------------------------- | ----- | ------- |
 | "ADIEU"  | null                                    | 1     | 6.55    |
-| "PLANE"  | ["C=WW","L=WR", "A=RR", "N=RR", "E=RR"] | 2     | 5.42    |
+| "PLANE"  | ["C=WW","L=RW", "A=RR", "N=RR", "E=RR"] | 2     | 5.42    |
 
 *Since we are only caching 1st and 2nd word bit values, we can store a single previous guess.*
 
@@ -202,15 +227,15 @@ We can define the two DynamoDB schemas: one to cache entropy values and another 
 
 - **`Outcome` (partition key) - stringset**: Information outcome of a word guessed.
    - WW: Wrong Letter, Wrong Position
-   - WR: Right Letter, Wrong Position
+   - RW: Right Letter, Wrong Position
    - RR: Right Letter, Right Position
 - **`Bits` (attribute) - number**: Number of bits provided by the outcome.
 
 *Sample Table Values*
 | Outcome                                 | Bits    |
 | --------------------------------------- | ------- |
-| ["C=WW","R=WR", "A=RR", "N=RR", "E=RR"] | 5.42    |
-| ["P=WW","L=WR", "A=RR", "N=RR", "E=RR"] | 6.22    |
+| ["C=WW","R=RW", "A=RR", "N=RR", "E=RR"] | 5.42    |
+| ["P=WW","L=RW", "A=RR", "N=RR", "E=RR"] | 6.22    |
 
 *Since we are only caching 1st word bit values, we can store minimal information (no `PreviousGuess` or `Entropy` fields).*
 
