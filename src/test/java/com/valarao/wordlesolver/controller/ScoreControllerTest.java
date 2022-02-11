@@ -2,6 +2,7 @@ package com.valarao.wordlesolver.controller;
 
 import com.google.common.collect.ImmutableList;
 import com.valarao.wordlesolver.calculator.ScoreCalculator;
+import com.valarao.wordlesolver.loader.WordDatasetLoader;
 import com.valarao.wordlesolver.model.CalculateInformationScoresRequest;
 import com.valarao.wordlesolver.model.CalculateInformationScoresResponse;
 import com.valarao.wordlesolver.model.LetterCorrectness;
@@ -23,6 +24,11 @@ public class ScoreControllerTest {
     private static final String PAST_GUESS_WORD_2 = "CRANE";
     private static final String FUTURE_GUESS_WORD_1 = "HUMOR";
     private static final String FUTURE_GUESS_WORD_2 = "CREST";
+    private static final List<String> ALL_WORDS = ImmutableList.of(
+            PAST_GUESS_WORD_1,
+            PAST_GUESS_WORD_2,
+            FUTURE_GUESS_WORD_1,
+            FUTURE_GUESS_WORD_2);
 
     private static final Double SCORE_VALUE_1 = 1.0;
     private static final Double SCORE_VALUE_2 = 2.0;
@@ -81,6 +87,9 @@ public class ScoreControllerTest {
             RETROSPECTIVE_SCORE_2);
 
     @Mock
+    private WordDatasetLoader wordDatasetLoader;
+
+    @Mock
     private ScoreCalculator<PredictiveScore> predictiveScoreCalculator;
 
     @Mock
@@ -91,13 +100,14 @@ public class ScoreControllerTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        scoreController = new ScoreController(predictiveScoreCalculator, retrospectiveScoreCalculator);
+        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator);
     }
 
     @Test
     public void testCalculateInformationScores_Success() {
-        when(predictiveScoreCalculator.calculate(PAST_GUESSES)).thenReturn(PREDICTIVE_SCORES);
-        when(retrospectiveScoreCalculator.calculate(PAST_GUESSES)).thenReturn(RETROSPECTIVE_SCORES);
+        when(wordDatasetLoader.load()).thenReturn(ALL_WORDS);
+        when(predictiveScoreCalculator.calculate(ALL_WORDS, PAST_GUESSES)).thenReturn(PREDICTIVE_SCORES);
+        when(retrospectiveScoreCalculator.calculate(ALL_WORDS, PAST_GUESSES)).thenReturn(RETROSPECTIVE_SCORES);
         CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
                 .guesses(PAST_GUESSES)
                 .build();
