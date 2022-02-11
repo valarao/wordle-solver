@@ -5,7 +5,7 @@ package com.valarao.wordlesolver.model;
  */
 public enum LetterCorrectness {
 
-    WRONG_LETTER_WRONG_POSITION,
-    RIGHT_LETTER_WRONG_POSITION,
-    RIGHT_LETTER_RIGHT_POSITION
+    PLACED,
+    VALID,
+    WRONG
 }

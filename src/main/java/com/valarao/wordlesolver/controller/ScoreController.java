@@ -1,16 +1,20 @@
 package com.valarao.wordlesolver.controller;
 
+import com.valarao.wordlesolver.calculator.ScoreCalculator;
 import com.valarao.wordlesolver.model.CalculateInformationScoresRequest;
-
 import com.valarao.wordlesolver.model.CalculateInformationScoresResponse;
+import com.valarao.wordlesolver.model.PastGuess;
 import com.valarao.wordlesolver.model.PredictiveScore;
 import com.valarao.wordlesolver.model.RetrospectiveScore;
+
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +22,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ScoreController {
+
+    @Autowired
+    @NonNull
+    private final ScoreCalculator<PredictiveScore> predictiveScoreCalculator;
+
+    @Autowired
+    @NonNull
+    private final ScoreCalculator<RetrospectiveScore> retrospectiveScoreCalculator;
 
     /***
      *
@@ -28,14 +41,10 @@ public class ScoreController {
     @PostMapping("/scores")
     public CalculateInformationScoresResponse calculateInformationScores(
             @RequestBody CalculateInformationScoresRequest request) {
-
-        // TODO: Populate with calculated values
-        List<PredictiveScore> predictiveScores = new ArrayList<>();
-        List<RetrospectiveScore> retrospectiveScores = new ArrayList<>();
-
+        List<PastGuess> guesses = request.getGuesses();
         return CalculateInformationScoresResponse.builder()
-                .predictiveScores(predictiveScores)
-                .retrospectiveScores(retrospectiveScores)
+                .predictiveScores(predictiveScoreCalculator.calculate(guesses))
+                .retrospectiveScores(retrospectiveScoreCalculator.calculate(guesses))
                 .build();
     }
 }
