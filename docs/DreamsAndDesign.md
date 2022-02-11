@@ -187,17 +187,17 @@ I plan to develop a single endpoint: `POST /api/entropy-scores`
 
 *How should the entropy **data** be stored?*
 
-##### Solution 1: In-File JSON
+##### Solution: In-File JSON
 
-I considered just storing all values in a JSON file on the EC2 instance running entropy calculation. While simple, this leaves limited opportunity to perform entropy value caching past the 1st stage given the potential data size. Moreover, this may cause performance to slow if the word bank of valid words gets expanded in the future.
+I will first consider simply storing all values in a JSON file on the EC2 instance running the entropy calculations. While simple, this leaves limited opportunity to perform entropy value caching past the 1st stage given the potential data size. Moreover, this may cause performance to slow if the word bank of valid words gets expanded in the future.
 
-Currently, the app would require 489,645 information bit values to either be stored or calculated upon first load (see appendix for calculations).
+Based on the 2,315 possible answers, the app would require 489,645 information bit values to either be stored or calculated initially (see appendix for calculations). I will measure the time it takes to perform a `POST /api/entropy-scores` request to see if always calculating entropy values causes noticeable performance issues.
 
-##### Solution 2: DynamoDB (Chosen)
+##### Potential Improvement: DynamoDB
 
-The solution I opted for was to store entropy data in DynamoDB. I chose this solution for the flexibility to cache entropy values in the first two stages to reduce calculation times.
+If calculating all values at runtime causes the application to be too slow, I plan to store entropy data in DynamoDB. This would allow for flexibility to cache entropy values in the first two stages to reduce calculation times.
 
-Based on my analysis of how many values need to be stored, I decided to cache 3 value categories:
+Based on my analysis of how many values need to be stored, I may cache 3 value categories:
 - 1st word entropy values (2,315)
 - 1st word bit values (489,645)
 - 2nd word entropy values (489,645)
@@ -277,16 +277,16 @@ Let's see if my estimation skills have gotten any better :P
 
 #### Phase 1: Server
 
-| Task                                           | Est. Days | Exp. Completion |
-| ---------------------------------------------- | --------- | --------------- |
-| Initialize server skeleton structure           | 1         | 02/10/21        |
-| Define data models                             | 0.5       | 02/11/21        |
-| Define interfaces                              | 0.5       | 02/11/21        |
-| Setup REST endpoint                            | 0.25      | 02/12/21        |
-| Implement entropy value calculator             | 1         | 02/13/21        |
-| Wire `POST /entropy-scores` controller         | 0.5       | 02/15/21        |
-| Setup DynamoDB DAO model(s)                    | 0.5       | 02/16/21        |
-| Modify entropy calculator to use cached values | 1         | 02/16/21        |
+| Task                                                          | Est. Days | Exp. Completion |
+| ------------------------------------------------------------- | --------- | --------------- |
+| Initialize server skeleton structure                          | 1         | 02/10/21        |
+| Define data models                                            | 0.5       | 02/11/21        |
+| Define interfaces                                             | 0.5       | 02/11/21        |
+| Setup REST endpoint                                           | 0.25      | 02/12/21        |
+| Implement entropy value calculator                            | 1         | 02/13/21        |
+| Wire `POST /entropy-scores` controller                        | 0.5       | 02/15/21        |
+| Setup DynamoDB DAO model (if neccessary)                      | 0.5       | 02/16/21        |
+| Modify entropy calculator to use cached values (if necessary) | 1         | 02/16/21        |
 
 #### Phase 2: Client
 
@@ -342,7 +342,7 @@ The entropy calculation as planned only uses a basic probability formula. I wond
 
 ### Appendix: Data Caching Space Analysis
 
-This analysis exhibits the calculations for expected entropy values to store with the chosen DynamoDB-based data caching solution.
+This analysis exhibits the calculations for expected entropy values to store with a DynamoDB-based data caching solution.
 
 Denoting the first guess as an L1 guess, the second guess as an L2 guess, and so on, we can conduct a space analysis. With no guesses, we would only need to store an entropy value for each possible word. If we wanted to store the number of bits of an actual outcome, for each word, we would have to store 3<sup>5</sup> values (3 cases, 5 letters).
 
@@ -352,6 +352,6 @@ Denoting the first guess as an L1 guess, the second guess as an L2 guess, and so
 - **L2 bit values** = 489,645 * 3<sup>5</sup> = 118,983,735
 - **L3 entropy values** = L2 bit values = 118,983,735
 
-Based on this analysis, caching values can get very large very quickly. Moreover, the value of caching has diminishing marginal returns as the space of possibilities reduces.
+Based on this analysis, caching values grows quickly at each level. Moreover, the value of caching has diminishing marginal returns as the space of possibilities reduces.
 
-Therefore, I plan to only cache L1 entropy values, L1 bit values, and L2 entropy values to begin with. I can also improve space use by deleting zero-entropy values and inferring that on the application side.
+Therefore, I would plan to only cache L1 entropy values, L1 bit values, and L2 entropy values to begin with. I can also improve space use by deleting zero-entropy values and inferring that on the application side.
