@@ -259,7 +259,7 @@ Let's see if my estimation skills have gotten any better :P
 | Define interfaces                              | 0.5       | 02/11/21        |
 | Setup REST endpoint                            | 0.25      | 02/12/21        |
 | Implement entropy value calculator             | 1         | 02/13/21        |
-| Wire `GET /entropy-scores` controller          | 0.5       | 02/15/21        |
+| Wire `POST /entropy-scores` controller         | 0.5       | 02/15/21        |
 | Setup DynamoDB DAO model(s)                    | 0.5       | 02/16/21        |
 | Modify entropy calculator to use cached values | 1         | 02/16/21        |
 
