@@ -12,5 +12,4 @@ public class WordleSolverApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WordleSolverApplication.class, args);
 	}
-
 }
