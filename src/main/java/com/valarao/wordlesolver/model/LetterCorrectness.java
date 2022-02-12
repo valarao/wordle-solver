@@ -7,5 +7,6 @@ public enum LetterCorrectness {
 
     PLACED,
     VALID,
-    WRONG
+    WRONG,
+    UNKNOWN
 }
