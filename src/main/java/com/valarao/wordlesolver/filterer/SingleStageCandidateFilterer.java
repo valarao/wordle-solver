@@ -4,6 +4,7 @@ import com.valarao.wordlesolver.model.LetterCorrectness;
 import com.valarao.wordlesolver.model.PastGuess;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,15 @@ import java.util.stream.Collectors;
  */
 public class SingleStageCandidateFilterer implements CandidateFilterer {
     private static final int ALPHABET_LENGTH = 26;
+
+    @Override
+    public List<String> filter(List<String> candidateGuesses, List<PastGuess> pastGuesses) {
+        List<String> filteredWords = new ArrayList<>(candidateGuesses);
+        for (PastGuess pastGuess : pastGuesses) {
+            filteredWords = filter(filteredWords, pastGuess);
+        }
+        return filteredWords;
+    }
 
     @Override
     public List<String> filter(@NonNull List<String> candidateGuesses, @NonNull PastGuess pastGuess) {
@@ -58,6 +68,12 @@ public class SingleStageCandidateFilterer implements CandidateFilterer {
                 if (alphabetIndex != guessedLetterAlphabetIndex) {
                     adjacencyMatrix[alphabetIndex][guessedWordIndex] = LetterCorrectness.WRONG;
                 }
+            }
+        }
+
+        if (letterCorrectness.equals(LetterCorrectness.WRONG)) {
+            for (int letterIndex = 0; letterIndex < adjacencyMatrix[0].length; letterIndex++) {
+                adjacencyMatrix[guessedLetterAlphabetIndex][letterIndex] = LetterCorrectness.WRONG;
             }
         }
     }

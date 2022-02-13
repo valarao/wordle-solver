@@ -11,6 +11,13 @@ public interface CandidateFilterer {
 
     /**
      * @param candidateGuesses List of candidate guesses to filter on.
+     * @param pastGuesses List of guess made to apply as a filter.
+     * @return List of filtered candidate guesses.
+     */
+    List<String> filter(List<String> candidateGuesses, List<PastGuess> pastGuesses);
+
+    /**
+     * @param candidateGuesses List of candidate guesses to filter on.
      * @param pastGuess Guess made to apply as a filter.
      * @return List of filtered candidate guesses.
      */
