@@ -17,10 +17,6 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 public class PredictiveScoreCalculator extends ScoreCalculator<PredictiveScore> {
-
-    @NonNull
-    private final PermutationGenerator<LetterCorrectness> permutationGenerator;
-
     @Override
     public List<PredictiveScore> calculate(@NonNull List<String> allWords,
                                            @NonNull List<PastGuess> pastGuesses) {
@@ -46,18 +42,9 @@ public class PredictiveScoreCalculator extends ScoreCalculator<PredictiveScore> 
         this.candidateFilterer = candidateFilterer;
     }
 
-    private double calculateEntropyScore(List<String> candidateWords, String word,
-                                         List<List<LetterCorrectness>> correctnessPermutations) {
-        double entropyScore = 0.0;
-        double normalizer = 0.0;
-        for (List<LetterCorrectness> correctnessPermutation : correctnessPermutations) {
-            double outcomeProbability = calculateOutcomeProbability(candidateWords, word, correctnessPermutation);
-            double bitScore = -(Math.log(outcomeProbability) / Math.log(2));
-            double weightedBitScore = outcomeProbability != 0.0 ? outcomeProbability * bitScore : 0;
-            entropyScore += weightedBitScore;
-            normalizer += outcomeProbability;
-        }
-
-        return entropyScore / normalizer;
+    @Override
+    @Autowired
+    protected void setPermutationGenerator(@NonNull PermutationGenerator<LetterCorrectness> permutationGenerator) {
+        this.permutationGenerator = permutationGenerator;
     }
 }
