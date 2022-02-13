@@ -1,6 +1,7 @@
 package com.valarao.wordlesolver.calculator;
 
 import com.valarao.wordlesolver.model.LetterCorrectness;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -11,7 +12,11 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 public class CorrectnessPermutationGenerator implements PermutationGenerator<LetterCorrectness> {
-    private final int wordLength;
+
+    @NonNull
+    private final Integer wordLength;
+
+    @NonNull
     private final List<LetterCorrectness> correctnessPossibilities;
 
     @Override

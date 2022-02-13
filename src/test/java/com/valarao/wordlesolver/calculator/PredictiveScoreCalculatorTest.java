@@ -44,8 +44,9 @@ public class PredictiveScoreCalculatorTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        predictiveScoreCalculator = new PredictiveScoreCalculator(permutationGenerator);
+        predictiveScoreCalculator = new PredictiveScoreCalculator();
         predictiveScoreCalculator.setCandidateFilterer(candidateFilterer);
+        predictiveScoreCalculator.setPermutationGenerator(permutationGenerator);
         when(permutationGenerator.generate()).thenReturn(CORRECTNESS_PERMUTATIONS);
     }
 
@@ -59,10 +60,18 @@ public class PredictiveScoreCalculatorTest {
 
     @Test
     public void testCalculate_Unfiltered() {
-        List<String> allWords = ImmutableList.of("CHEAP", "GREET", "FRONT");
+        List<String> allWords = ImmutableList.of("HEARD", "GREET", "FRONT");
         when(candidateFilterer.filter(eq(allWords), anyList())).thenReturn(allWords);
         when(candidateFilterer.filter(eq(allWords), any(PastGuess.class))).thenReturn(allWords);
-        List<PastGuess> pastGuesses = new ArrayList<>();
+        List<PastGuess> pastGuesses = ImmutableList.of(PastGuess.builder()
+                        .guessWord("CHEAP")
+                        .wordCorrectness(ImmutableList.of(
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG
+                        )).build());
         List<PredictiveScore> results = predictiveScoreCalculator.calculate(allWords, pastGuesses);
         assertEquals(3, results.size());
     }
@@ -95,5 +104,11 @@ public class PredictiveScoreCalculatorTest {
     public void testSetCandidateFilterer_NullCandidateFilterer() {
         assertThrows(NullPointerException.class,
                 () -> predictiveScoreCalculator.setCandidateFilterer(null));
+    }
+
+    @Test
+    public void testSetPermutationGenerator_NullPermutationGenerator() {
+        assertThrows(NullPointerException.class,
+                () -> predictiveScoreCalculator.setPermutationGenerator(null));
     }
 }

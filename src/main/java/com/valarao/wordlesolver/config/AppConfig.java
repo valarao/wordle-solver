@@ -27,7 +27,7 @@ public class AppConfig {
 
     @Bean
     public ScoreCalculator<PredictiveScore> predictiveScoreCalculator(PermutationGenerator<LetterCorrectness> permutationGenerator) {
-        return new PredictiveScoreCalculator(permutationGenerator);
+        return new PredictiveScoreCalculator();
     }
 
     @Bean

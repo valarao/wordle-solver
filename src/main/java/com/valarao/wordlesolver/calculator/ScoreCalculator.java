@@ -13,6 +13,8 @@ public abstract class ScoreCalculator<T> {
 
     protected CandidateFilterer candidateFilterer;
 
+    protected PermutationGenerator<LetterCorrectness> permutationGenerator;
+
     /***
      *
      * @param allWords List of all words considered to guess.
@@ -23,14 +25,34 @@ public abstract class ScoreCalculator<T> {
 
     protected abstract void setCandidateFilterer(CandidateFilterer candidateFilterer);
 
-    protected double calculateOutcomeProbability(List<String> candidateWords, String word,
-                                                             List<LetterCorrectness> correctnessPermutation) {
-        PastGuess outcomeGuess = PastGuess.builder()
-                .guessWord(word)
-                .wordCorrectness(correctnessPermutation)
-                .build();
+    protected abstract void setPermutationGenerator(PermutationGenerator<LetterCorrectness> permutationGenerator);
 
+    protected double calculateOutcomeProbability(List<String> candidateWords, PastGuess outcomeGuess) {
         List<String> remainingGuesses = candidateFilterer.filter(candidateWords, outcomeGuess);
         return (double) remainingGuesses.size() / candidateWords.size();
+    }
+
+    protected double calculateBitScore(double outcomeProbability) {
+        return -(Math.log(outcomeProbability) / Math.log(2));
+    }
+
+    protected double calculateEntropyScore(List<String> candidateWords, String guessWord,
+                                         List<List<LetterCorrectness>> correctnessPermutations) {
+        double entropyScore = 0.0;
+        double normalizer = 0.0;
+        for (List<LetterCorrectness> correctnessPermutation : correctnessPermutations) {
+            PastGuess outcomeGuess = PastGuess.builder()
+                    .guessWord(guessWord)
+                    .wordCorrectness(correctnessPermutation)
+                    .build();
+
+            double outcomeProbability = calculateOutcomeProbability(candidateWords, outcomeGuess);
+            double bitScore = calculateBitScore(outcomeProbability);
+            double weightedBitScore = outcomeProbability != 0.0 ? outcomeProbability * bitScore : 0;
+            entropyScore += weightedBitScore;
+            normalizer += outcomeProbability;
+        }
+
+        return entropyScore / normalizer;
     }
 }
