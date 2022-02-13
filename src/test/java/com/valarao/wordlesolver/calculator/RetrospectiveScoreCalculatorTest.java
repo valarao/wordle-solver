@@ -40,4 +40,10 @@ public class RetrospectiveScoreCalculatorTest {
         assertThrows(NullPointerException.class,
                 () -> retrospectiveScoreCalculator.calculate(allWords, null));
     }
+
+    @Test
+    public void testSetCandidateFilterer_NullCandidateFilterer() {
+        assertThrows(NullPointerException.class,
+                () -> retrospectiveScoreCalculator.setCandidateFilterer(null));
+    }
 }

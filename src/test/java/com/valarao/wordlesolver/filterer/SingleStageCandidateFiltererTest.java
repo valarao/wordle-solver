@@ -21,7 +21,33 @@ public class SingleStageCandidateFiltererTest {
     }
 
     @Test
-    public void testFilter_AllPlaced() {
+    public void testFilterMultiple() {
+        List<String> candidateGuesses = ImmutableList.of("BIRDS", "HEARD", "DROPS");
+        PastGuess pastGuess1 = PastGuess.builder()
+                .guessWord("WORDS")
+                .wordCorrectness(ImmutableList.of(LetterCorrectness.UNKNOWN,
+                        LetterCorrectness.VALID,
+                        LetterCorrectness.UNKNOWN,
+                        LetterCorrectness.UNKNOWN,
+                        LetterCorrectness.UNKNOWN))
+                .build();
+        PastGuess pastGuess2 = PastGuess.builder()
+                .guessWord("BIRDS")
+                .wordCorrectness(ImmutableList.of(LetterCorrectness.UNKNOWN,
+                        LetterCorrectness.UNKNOWN,
+                        LetterCorrectness.UNKNOWN,
+                        LetterCorrectness.UNKNOWN,
+                        LetterCorrectness.PLACED))
+                .build();
+        List<PastGuess> pastGuesses = ImmutableList.of(pastGuess1, pastGuess2);
+
+        List<String> filteredCandidates = candidateFilterer.filter(candidateGuesses, pastGuesses);
+        assertEquals(1, filteredCandidates.size());
+        assertEquals("DROPS", filteredCandidates.get(0));
+    }
+
+    @Test
+    public void testFilterOne_AllPlaced() {
         List<String> candidateGuesses = ImmutableList.of("BIRDS", "HEARD", "DROPS");
         PastGuess pastGuess = PastGuess.builder()
                 .guessWord("WORDS")
@@ -36,7 +62,7 @@ public class SingleStageCandidateFiltererTest {
     }
 
     @Test
-    public void testFilter_AllUnknown() {
+    public void testFilterOne_AllUnknown() {
         List<String> candidateGuesses = ImmutableList.of("BIRDS", "HEARD", "DROPS");
         PastGuess pastGuess = PastGuess.builder()
                 .guessWord("WORDS")
@@ -51,7 +77,7 @@ public class SingleStageCandidateFiltererTest {
     }
 
     @Test
-    public void testFilter_AllWrong() {
+    public void testFilterOne_AllWrong() {
         List<String> candidateGuesses = ImmutableList.of("BIRDS", "HAPPY", "DROPS");
         PastGuess pastGuess = PastGuess.builder()
                 .guessWord("WORDS")
@@ -67,7 +93,7 @@ public class SingleStageCandidateFiltererTest {
     }
 
     @Test
-    public void testFilter_AllValid() {
+    public void testFilterOne_AllValid() {
         List<String> candidateGuesses = ImmutableList.of("BIRDS", "HAPPY", "DROPS");
         PastGuess pastGuess = PastGuess.builder()
                 .guessWord("SDIRB")
@@ -83,7 +109,7 @@ public class SingleStageCandidateFiltererTest {
     }
 
     @Test
-    public void testFilter_PartialValid() {
+    public void testFilterOne_PartialValid() {
         List<String> candidateGuesses = ImmutableList.of("BIRDS", "HAPPY", "DROPS");
         PastGuess pastGuess = PastGuess.builder()
                 .guessWord("DRIPS")
@@ -99,7 +125,7 @@ public class SingleStageCandidateFiltererTest {
     }
 
     @Test
-    public void testFilter_NullCandidateGuesses() {
+    public void testFilterOne_NullCandidateGuesses() {
         PastGuess pastGuess = PastGuess.builder()
                 .guessWord("word")
                 .wordCorrectness(new ArrayList<>())
@@ -109,9 +135,9 @@ public class SingleStageCandidateFiltererTest {
     }
 
     @Test
-    public void testFilter_NullPastGuess() {
+    public void testFilterOne_NullPastGuess() {
         List<String> candidateGuesses = new ArrayList<>();
         assertThrows(NullPointerException.class,
-                () -> candidateFilterer.filter(candidateGuesses, null));
+                () -> candidateFilterer.filter(candidateGuesses, (PastGuess) null));
     }
 }
