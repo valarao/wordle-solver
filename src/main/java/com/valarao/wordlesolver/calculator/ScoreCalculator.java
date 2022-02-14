@@ -23,9 +23,9 @@ public abstract class ScoreCalculator<T> {
      */
     public abstract List<T> calculate(List<String> allWords, List<PastGuess> pastGuesses);
 
-    protected abstract void setCandidateFilterer(CandidateFilterer candidateFilterer);
+    public abstract void setCandidateFilterer(CandidateFilterer candidateFilterer);
 
-    protected abstract void setPermutationGenerator(PermutationGenerator<LetterCorrectness> permutationGenerator);
+    public abstract void setPermutationGenerator(PermutationGenerator<LetterCorrectness> permutationGenerator);
 
     protected double calculateOutcomeProbability(List<String> candidateWords, PastGuess outcomeGuess) {
         List<String> remainingGuesses = candidateFilterer.filter(candidateWords, outcomeGuess);
