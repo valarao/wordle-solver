@@ -5,17 +5,15 @@ import com.valarao.wordlesolver.model.PastGuess;
 import lombok.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Implementation of a CandidateFilterer using a single past guess.
- *
- * Constructs an adjacency matrix of [letter][correctness] to inform filtering.
  */
 public class SingleStageCandidateFilterer implements CandidateFilterer {
-    private static final int ALPHABET_LENGTH = 26;
-
     @Override
     public List<String> filter(List<String> candidateGuesses, List<PastGuess> pastGuesses) {
         List<String> filteredWords = new ArrayList<>(candidateGuesses);
@@ -27,79 +25,113 @@ public class SingleStageCandidateFilterer implements CandidateFilterer {
 
     @Override
     public List<String> filter(@NonNull List<String> candidateGuesses, @NonNull PastGuess pastGuess) {
-        LetterCorrectness[][] correctnessMatrix = createCorrectnessMatrix(pastGuess);
         return candidateGuesses.stream()
-                .filter((candidateWord) -> isValidCandidateWord(candidateWord, pastGuess, correctnessMatrix))
+                .filter((candidateWord) -> isValidCandidateWord(candidateWord, pastGuess))
                 .collect(Collectors.toList());
     }
 
-    private LetterCorrectness[][] createCorrectnessMatrix(PastGuess pastGuess) {
-        int guessedWordLength = pastGuess.getGuessWord().length();
-        LetterCorrectness[][] adjacencyMatrix = new LetterCorrectness[ALPHABET_LENGTH][guessedWordLength];
-        prefillMatrixAsUnknown(guessedWordLength, adjacencyMatrix);
-        fillGuessWordLetterCorrectness(pastGuess, guessedWordLength, adjacencyMatrix);
+    private boolean isValidCandidateWord(String candidateWord, PastGuess pastGuess) {
+        String guessWord = pastGuess.getGuessWord();
+        List<LetterCorrectness> correctness = pastGuess.getWordCorrectness();
+        List<LetterIndexPair> placedList = new ArrayList<>();
+        List<LetterIndexPair> validList = new ArrayList<>();
+        List<LetterIndexPair> wrongList = new ArrayList<>();
+        List<LetterIndexPair> unknownList = new ArrayList<>();
 
-        return adjacencyMatrix;
+        Map<LetterCorrectness, List<LetterIndexPair>> letterMap = initializeLetterMap(placedList, validList, wrongList, unknownList);
+        Map<Character, Integer> letterCounts = new HashMap<>();
+        populateMapWithGuessWord(guessWord, correctness, letterMap, letterCounts);
+
+        if (arePlacedLettersNotValid(candidateWord, placedList)) return false;
+        if (areValidLettersNotValid(candidateWord, validList)) return false;
+        return !areWrongLettersNotValid(candidateWord, wrongList, letterCounts);
     }
 
-    private void prefillMatrixAsUnknown(int guessedWordLength, LetterCorrectness[][] adjacencyMatrix) {
-        for (int alphabetIndex = 0; alphabetIndex < ALPHABET_LENGTH; alphabetIndex++) {
-            for (int guessedWordIndex = 0; guessedWordIndex < guessedWordLength; guessedWordIndex++) {
-                adjacencyMatrix[alphabetIndex][guessedWordIndex] = LetterCorrectness.UNKNOWN;
-            }
-        }
-    }
+    private boolean areWrongLettersNotValid(String candidateWord, List<LetterIndexPair> wrongList,
+                                            Map<Character, Integer> letterCounts) {
+        for (LetterIndexPair pair : wrongList) {
+            for (int letterIndex = 0; letterIndex < candidateWord.length(); letterIndex++) {
+                if (pair.letter == candidateWord.charAt(letterIndex)) {
+                    if (pair.index == letterIndex) {
+                        return true;
+                    }
 
-    private void fillGuessWordLetterCorrectness(PastGuess pastGuess, int guessedWordLength,
-                                                LetterCorrectness[][] adjacencyMatrix) {
-        for (int guessedWordIndex = 0; guessedWordIndex < guessedWordLength; guessedWordIndex++) {
-            char letter = pastGuess.getGuessWord().charAt(guessedWordIndex);
-            int guessedLetterAlphabetIndex = convertLetterToMatrixIndex(letter);
-            LetterCorrectness letterCorrectness = pastGuess.getWordCorrectness().get(guessedWordIndex);
-            adjacencyMatrix[guessedLetterAlphabetIndex][guessedWordIndex] = letterCorrectness;
-            postFillRowAsWrong(adjacencyMatrix, guessedWordIndex, guessedLetterAlphabetIndex, letterCorrectness);
-        }
-    }
+                    int letterCount = letterCounts.getOrDefault(pair.letter, 0);
+                    if (letterCount < 1) {
+                        return true;
+                    }
 
-    private void postFillRowAsWrong(LetterCorrectness[][] adjacencyMatrix, int guessedWordIndex,
-                                    int guessedLetterAlphabetIndex, LetterCorrectness letterCorrectness) {
-        if (letterCorrectness.equals(LetterCorrectness.PLACED)) {
-            for (int alphabetIndex = 0; alphabetIndex < ALPHABET_LENGTH; alphabetIndex++) {
-                if (alphabetIndex != guessedLetterAlphabetIndex) {
-                    adjacencyMatrix[alphabetIndex][guessedWordIndex] = LetterCorrectness.WRONG;
+                    letterCounts.put(pair.letter, letterCount - 1);
                 }
             }
         }
+        return false;
+    }
 
-        if (letterCorrectness.equals(LetterCorrectness.WRONG)) {
-            for (int letterIndex = 0; letterIndex < adjacencyMatrix[0].length; letterIndex++) {
-                adjacencyMatrix[guessedLetterAlphabetIndex][letterIndex] = LetterCorrectness.WRONG;
+    private boolean areValidLettersNotValid(String candidateWord, List<LetterIndexPair> validList) {
+        for (LetterIndexPair pair : validList) {
+            boolean letterExistsInCandidate = false;
+            for (int letterIndex = 0; letterIndex < candidateWord.length(); letterIndex++) {
+                if (pair.letter == candidateWord.charAt(letterIndex)) {
+                    if (pair.index == letterIndex) {
+                        return true;
+                    }
+
+                    letterExistsInCandidate = true;
+                }
+            }
+
+            if (!letterExistsInCandidate) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean arePlacedLettersNotValid(String candidateWord, List<LetterIndexPair> placedList) {
+        for (LetterIndexPair pair : placedList) {
+            char candidateLetter = candidateWord.charAt(pair.index);
+            if (pair.letter != candidateLetter) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Map<LetterCorrectness, List<LetterIndexPair>> initializeLetterMap(List<LetterIndexPair> placedList,
+                                                                              List<LetterIndexPair> validList,
+                                                                              List<LetterIndexPair> wrongList,
+                                                                              List<LetterIndexPair> unknownList) {
+        Map<LetterCorrectness, List<LetterIndexPair>> letterMap = new HashMap<>();
+        letterMap.put(LetterCorrectness.PLACED, placedList);
+        letterMap.put(LetterCorrectness.VALID, validList);
+        letterMap.put(LetterCorrectness.WRONG, wrongList);
+        letterMap.put(LetterCorrectness.UNKNOWN, unknownList);
+        return letterMap;
+    }
+
+    private void populateMapWithGuessWord(String guessWord, List<LetterCorrectness> correctness, Map<LetterCorrectness,
+            List<LetterIndexPair>> letterMap, Map<Character, Integer> letterCounts) {
+        for (int i = 0; i < guessWord.length(); i++) {
+            LetterCorrectness currentCorrectness = correctness.get(i);
+            char currentLetter = guessWord.charAt(i);
+            List<LetterIndexPair> list = letterMap.get(currentCorrectness);
+            list.add(new LetterIndexPair(currentLetter, i));
+
+            if (currentCorrectness.equals(LetterCorrectness.VALID)
+                    || currentCorrectness.equals(LetterCorrectness.PLACED)) {
+                letterCounts.put(currentLetter, letterCounts.getOrDefault(currentLetter, 1) + 1);
             }
         }
     }
 
-    private boolean isValidCandidateWord(String candidateWord, PastGuess pastGuess,
-                                         LetterCorrectness[][] correctnessMatrix) {
-        for (int letterIndex = 0; letterIndex < candidateWord.length(); letterIndex++) {
-            int alphabetIndex = convertLetterToMatrixIndex(candidateWord.charAt(letterIndex));
-            LetterCorrectness candidateLetterCorrectness = correctnessMatrix[alphabetIndex][letterIndex];
-            if (candidateLetterCorrectness.equals(LetterCorrectness.VALID) ||
-                    candidateLetterCorrectness.equals(LetterCorrectness.WRONG) ||
-                    isValidGuessedLetterNotInCandidate(candidateWord, pastGuess, letterIndex)) {
-                return false;
-            }
+    private static class LetterIndexPair {
+        public final char letter;
+        public final int index;
+
+        public LetterIndexPair(char letter, int index) {
+            this.letter = letter;
+            this.index = index;
         }
-
-        return true;
-    }
-
-    private boolean isValidGuessedLetterNotInCandidate(String candidateWord, PastGuess pastGuess, int letterIndex) {
-        LetterCorrectness letterCorrectness = pastGuess.getWordCorrectness().get(letterIndex);
-        String guessedLetter = String.valueOf(pastGuess.getGuessWord().charAt(letterIndex));
-        return letterCorrectness.equals(LetterCorrectness.VALID) && !candidateWord.contains(guessedLetter);
-    }
-
-    private int convertLetterToMatrixIndex(char letter) {
-        return (int) letter - 65;
     }
 }

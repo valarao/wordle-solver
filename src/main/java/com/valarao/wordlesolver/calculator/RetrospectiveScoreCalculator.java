@@ -41,13 +41,13 @@ public class RetrospectiveScoreCalculator extends ScoreCalculator<RetrospectiveS
 
     @Override
     @Autowired
-    protected void setCandidateFilterer(@NonNull CandidateFilterer candidateFilterer) {
+    public void setCandidateFilterer(@NonNull CandidateFilterer candidateFilterer) {
         this.candidateFilterer = candidateFilterer;
     }
 
     @Override
     @Autowired
-    protected void setPermutationGenerator(@NonNull PermutationGenerator<LetterCorrectness> permutationGenerator) {
+    public void setPermutationGenerator(@NonNull PermutationGenerator<LetterCorrectness> permutationGenerator) {
         this.permutationGenerator = permutationGenerator;
     }
 }
