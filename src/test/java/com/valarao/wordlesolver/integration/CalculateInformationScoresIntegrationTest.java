@@ -68,53 +68,53 @@ public class CalculateInformationScoresIntegrationTest {
         assertTrue(isTargetInPrediction(target, guesses));
     }
 
-//    @Test
-//    public void test_TargetABIDE_GuessSPEED() {
-//        String target = "ABIDE";
-//        List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
-//                .guessWord("SPEED")
-//                .wordCorrectness(ImmutableList.of(
-//                        LetterCorrectness.WRONG,
-//                        LetterCorrectness.WRONG,
-//                        LetterCorrectness.VALID,
-//                        LetterCorrectness.WRONG,
-//                        LetterCorrectness.VALID))
-//                .build());
-//
-//        assertTrue(isTargetInPrediction(target, guesses));
-//    }
-//
-//    @Test
-//    public void test_TargetSTEAL_GuessSPEED() {
-//        String target = "STEAL";
-//        List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
-//                .guessWord("SPEED")
-//                .wordCorrectness(ImmutableList.of(
-//                        LetterCorrectness.PLACED,
-//                        LetterCorrectness.WRONG,
-//                        LetterCorrectness.PLACED,
-//                        LetterCorrectness.WRONG,
-//                        LetterCorrectness.WRONG))
-//                .build());
-//
-//        assertTrue(isTargetInPrediction(target, guesses));
-//    }
-//
-//    @Test
-//    public void test_TargetCREPE_GuessSPEED() {
-//        String target = "CREPE";
-//        List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
-//                .guessWord("SPEED")
-//                .wordCorrectness(ImmutableList.of(
-//                        LetterCorrectness.WRONG,
-//                        LetterCorrectness.VALID,
-//                        LetterCorrectness.PLACED,
-//                        LetterCorrectness.VALID,
-//                        LetterCorrectness.WRONG))
-//                .build());
-//
-//        assertTrue(isTargetInPrediction(target, guesses));
-//    }
+    @Test
+    public void test_TargetABIDE_GuessSPEED() {
+        String target = "ABIDE";
+        List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
+                .guessWord("SPEED")
+                .wordCorrectness(ImmutableList.of(
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.VALID,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.VALID))
+                .build());
+
+        assertTrue(isTargetInPrediction(target, guesses));
+    }
+
+    @Test
+    public void test_TargetSTEAL_GuessSPEED() {
+        String target = "STEAL";
+        List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
+                .guessWord("SPEED")
+                .wordCorrectness(ImmutableList.of(
+                        LetterCorrectness.PLACED,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.PLACED,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.WRONG))
+                .build());
+
+        assertTrue(isTargetInPrediction(target, guesses));
+    }
+
+    @Test
+    public void test_TargetCREPE_GuessSPEED() {
+        String target = "CREPE";
+        List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
+                .guessWord("SPEED")
+                .wordCorrectness(ImmutableList.of(
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.VALID,
+                        LetterCorrectness.PLACED,
+                        LetterCorrectness.VALID,
+                        LetterCorrectness.WRONG))
+                .build());
+
+        assertTrue(isTargetInPrediction(target, guesses));
+    }
 
     private boolean isTargetInPrediction(String target, List<PastGuess> guesses) {
         CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder().guesses(guesses).build();
