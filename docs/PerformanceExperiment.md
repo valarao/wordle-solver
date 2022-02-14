@@ -1,12 +1,12 @@
 # Performance Experiment
 
-This document details an experiment to measure runtime performance of the endpoint `POST /api/scores` directly after [commit 9b7453c](https://github.com/valarao/wordle-solver/tree/9b7453cbf10e98cba9e457d6dff2a7c7c1050b3a). This commit marks the completion of the core business logic of the endpoint.
+This document details an experiment to measure performance of the endpoint `POST /api/scores` directly after [commit 9b7453c](https://github.com/valarao/wordle-solver/tree/9b7453cbf10e98cba9e457d6dff2a7c7c1050b3a). This commit marks the completion of the core business logic of the endpoint.
 
 ## Motivation
 
-The primary envisioned use case of the endpoint would be to serve the planned React site. The endpoint must be time-performant enough to serve common requests. For now, we can define execution time as "performant enough" if it is less than 3.0 seconds for the median case.
+The primary envisioned use case of the endpoint would be to serve the planned React site. The endpoint must be time-performant enough to serve common requests. For now, we can define execution time as "performant enough" if it is less than 5.0 seconds in 90%+ of endpoint calls.
 
-The first motivation of this experiment would be to inform next steps. Based on the experiment, one of two strategies will be followed:
+The first motivation of this experiment would be to inform next steps. Based on the experiment, one of two immediate strategies will be followed:
 1. Move ahead with developing the frontend client.
 2. Explore ways to optimize request performance. Since the proposed timeline for the server is 5 days ahead of schedule, time could be spared.
 
@@ -28,7 +28,7 @@ While mathematically sound, it would be interesting to see if choosing words bas
 
 ## Key Performance Determinants
 
-This experiment stemmed from the believe that there were a few major determinants that influenced execution time of endpoint calls.
+This experiment stemmed from the belief that there were a few major determinants that influenced execution time of endpoint calls.
 - **Guess quality**: The guess quality (i.e. the bit score) reduces the space of possible answers.
 - **Number of words considered**: Size of the words dataset (i.e. full vs. reduced) mainly influences the performance of the first guess. This is because there is no prior information to pre-filter. This would continue to be a major determinant when the guess quality is low.
 
@@ -55,7 +55,7 @@ Initializing the entropy scores for the 2,315 words without any guess specified 
 
 #### Non-Guess Runs Execution Time Distribution
 
-![](https://i.ibb.co/JCKfyL0/Starting-Runs.png)
+![Non-Guess Runs Execution Time Distribution](https://i.ibb.co/JCKfyL0/Starting-Runs.png)
 
 Compared to the non-guess runs, runs with at least one guess specified generally have an execution time that is 3 orders of magnitude lower than a non-guess run (median guess run time = 48ms). However, "bad guesses" with low bit scores still resulted in execution times greater than 10 seconds.
 
@@ -109,20 +109,19 @@ The main issue identified was that non-guess runs take far too long for an initi
 
 Another realization from this experiment is that there is no request validation for the endpoint. This means requests with guesses like "ZZZZZ" will be considered valid. Even if non-guess runs are cached, these guesses may be nearly as bad as having no guess at all. 
 
-**Action**: Implement validation such that guesses must be included in the full dataset. While including less common words, the average entropy score of words in the full dataset are comparable to those in the reduced dataset.  
+**Action**: Implement request validation such that guesses must be included in the full dataset. While including less common words, the average entropy score of words in the full dataset are comparable to those in the reduced dataset.  
 
 ### Valid Guesses can still Hurt
 
 Some guesses in the answer set (e.g., FUZZY) sometimes resulted in execution times greater than 10 seconds. While rare, these awful guesses are still valid guesses - and necessary guesses when they are the target word.
 
-**Action**: Explore parallelization using Java 8 streams. There are several opportunities to refactor loops and synchronous streams as parallel streams to speed up execution.     
+**Action**: Explore parallelization using Java 8 Streams. There are several opportunities to refactor loops and synchronous streams as parallel streams to speed up execution.     
 
 ### Entropy as a Heuristic
 
 Contrasting the p50, p75, and p99 games with the p01 and p25 games, we saw that choosing words with better entropy made the difference between winning and losing Wordle. What's more interesting is the fact that the p50 scenario outperformed the p75 and p99 scenario.  
 
-**Action**: Introduce randomness to varying degrees when programmatic simulations are built. While the p50 outperformance may have just been a fluke due to the small sample size, it would be interesting to see if injecting randomness can improve performance over thousands of runs. 
-  
+**Action**: Introduce randomness to varying degrees when programmatic simulations are built. While the p50 outperformance may have just been a fluke due to the small sample size, it would be interesting to see if injecting randomness can reduce performance (i.e., average number of guesses to reach target word) over thousands of runs. 
 
 ## Appendix (Recorded Data) 
 
