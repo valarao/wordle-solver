@@ -1,5 +1,6 @@
 package com.valarao.wordlesolver.controller;
 
+import com.valarao.wordlesolver.cache.CacheManager;
 import com.valarao.wordlesolver.calculator.ScoreCalculator;
 import com.valarao.wordlesolver.loader.WordDatasetLoader;
 import com.valarao.wordlesolver.model.CalculateInformationScoresRequest;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +39,10 @@ public class ScoreController {
     @NonNull
     private final ScoreCalculator<RetrospectiveScore> retrospectiveScoreCalculator;
 
+    @Autowired
+    @NonNull
+    private final CacheManager cacheManager;
+
     /***
      *
      * @param request Request with past guesses made.
@@ -49,7 +53,14 @@ public class ScoreController {
             @RequestBody CalculateInformationScoresRequest request) {
         List<String> allWords = wordDatasetLoader.load();
         List<PastGuess> guesses = request.getGuesses();
+
+        if (guesses.isEmpty()) {
+            return cacheManager.getScores();
+        }
+
+        List<PredictiveScore> predictiveScores = predictiveScoreCalculator.calculate(allWords, guesses);
         return CalculateInformationScoresResponse.builder()
+                .topWord(predictiveScores.get(predictiveScores.size() - 1).getGuessWord())
                 .predictiveScores(predictiveScoreCalculator.calculate(allWords, guesses))
                 .retrospectiveScores(retrospectiveScoreCalculator.calculate(allWords, guesses))
                 .build();

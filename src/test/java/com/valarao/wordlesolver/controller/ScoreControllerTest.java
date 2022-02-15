@@ -1,6 +1,7 @@
 package com.valarao.wordlesolver.controller;
 
 import com.google.common.collect.ImmutableList;
+import com.valarao.wordlesolver.cache.CacheManager;
 import com.valarao.wordlesolver.calculator.ScoreCalculator;
 import com.valarao.wordlesolver.loader.WordDatasetLoader;
 import com.valarao.wordlesolver.model.CalculateInformationScoresRequest;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -95,12 +97,15 @@ public class ScoreControllerTest {
     @Mock
     private ScoreCalculator<RetrospectiveScore> retrospectiveScoreCalculator;
 
+    @Mock
+    private CacheManager cacheManager;
+
     private ScoreController scoreController;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator);
+        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator, cacheManager);
     }
 
     @Test
@@ -115,5 +120,22 @@ public class ScoreControllerTest {
         CalculateInformationScoresResponse actualResponse = scoreController.calculateInformationScores(request);
         assertEquals(PREDICTIVE_SCORES, actualResponse.getPredictiveScores());
         assertEquals(RETROSPECTIVE_SCORES, actualResponse.getRetrospectiveScores());
+    }
+
+    @Test
+    public void testCalculateInformationScores_Guess() {
+        CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
+                .guesses(new ArrayList<>())
+                .build();
+
+        CalculateInformationScoresResponse expectedResponse = CalculateInformationScoresResponse.builder()
+                .topWord(FUTURE_GUESS_WORD_1)
+                .predictiveScores(PREDICTIVE_SCORES)
+                .retrospectiveScores(RETROSPECTIVE_SCORES)
+                .build();
+
+        when(cacheManager.getScores()).thenReturn(expectedResponse);
+        CalculateInformationScoresResponse actualResponse = scoreController.calculateInformationScores(request);
+        assertEquals(expectedResponse, actualResponse);
     }
 }

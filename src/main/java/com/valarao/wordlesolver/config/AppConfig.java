@@ -1,6 +1,9 @@
 package com.valarao.wordlesolver.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.valarao.wordlesolver.cache.CacheManager;
+import com.valarao.wordlesolver.cache.JSONCacheManager;
 import com.valarao.wordlesolver.calculator.PermutationGenerator;
 import com.valarao.wordlesolver.calculator.PredictiveScoreCalculator;
 import com.valarao.wordlesolver.calculator.CorrectnessPermutationGenerator;
@@ -55,5 +58,16 @@ public class AppConfig {
                 LetterCorrectness.PLACED
         );
         return new CorrectnessPermutationGenerator(wordLength, correctnessPossibilities);
+    }
+
+    @Bean
+    public CacheManager cacheManager(ObjectMapper objectMapper) {
+        String cacheFile = new File("").getAbsoluteFile() + "/src/main/resources/data/cachedScores.json";
+        return new JSONCacheManager(objectMapper, cacheFile);
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

@@ -1,6 +1,9 @@
 package com.valarao.wordlesolver.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.valarao.wordlesolver.cache.CacheManager;
+import com.valarao.wordlesolver.cache.JSONCacheManager;
 import com.valarao.wordlesolver.calculator.CorrectnessPermutationGenerator;
 import com.valarao.wordlesolver.calculator.PermutationGenerator;
 import com.valarao.wordlesolver.calculator.PredictiveScoreCalculator;
@@ -21,20 +24,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CalculateInformationScoresIntegrationTest {
     private static final String WORDS_FILE = new File("").getAbsoluteFile() + "/src/main/resources/data/words.txt";
+    private static final String CACHED_FILE = new File("").getAbsoluteFile() + "/src/main/resources/data/cachedScores.json";
     private static final int WORD_LENGTH = 5;
     private static final List<LetterCorrectness> CORRECTNESS_POSSIBILITIES = ImmutableList.of(
             LetterCorrectness.WRONG,
             LetterCorrectness.VALID,
             LetterCorrectness.PLACED
     );
-
 
     private CandidateFilterer candidateFilterer;
 
@@ -45,11 +50,20 @@ public class CalculateInformationScoresIntegrationTest {
     @BeforeEach
     public void setup() {
         WordDatasetLoader wordDatasetLoader = new TextFileWordDatasetLoader(WORDS_FILE);
+        CacheManager cacheManager = new JSONCacheManager(new ObjectMapper(), CACHED_FILE);
         permutationGenerator = new CorrectnessPermutationGenerator(WORD_LENGTH, CORRECTNESS_POSSIBILITIES);
         candidateFilterer = new SingleStageCandidateFilterer();
         ScoreCalculator<PredictiveScore> predictiveScoreCalculator = createPredictiveScoreCalculator();
         ScoreCalculator<RetrospectiveScore> retrospectiveScoreCalculator = createRetrospectiveScoreCalculator();
-        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator);
+        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator, cacheManager);
+    }
+
+    @Test
+    public void test_NoGuesses() {
+        CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder().guesses(new ArrayList<>()).build();
+        CalculateInformationScoresResponse response = scoreController.calculateInformationScores(request);
+        assertEquals(2315, response.getPredictiveScores().size());
+        assertEquals(0, response.getRetrospectiveScores().size());
     }
 
     @Test
