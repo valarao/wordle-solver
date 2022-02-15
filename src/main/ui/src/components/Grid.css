@@ -1,0 +1,20 @@
+.Grid {
+    width: min(80vw, 330px);
+}
+
+.WordRow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.LetterCell {
+    border: 2px solid #2d333b;
+    position: relative;
+    width: 20%;
+    aspect-ratio: 1 / 1;
+    margin: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(25px + 2vmin);
+}

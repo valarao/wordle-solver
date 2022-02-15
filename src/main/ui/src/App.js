@@ -1,13 +1,15 @@
 import './App.css';
+import Grid from './components/Grid';
+import TopBar from './components/TopBar';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Wordle Solver
-        </p>
-      </header>
+      <div className="App-body">
+        <TopBar />
+        <Grid />
+        Keyboard
+      </div>
     </div>
   );
 }
