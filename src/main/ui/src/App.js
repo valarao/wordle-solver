@@ -1,12 +1,12 @@
 import './App.css';
 import Grid from './components/Grid';
-import TopBar from './components/TopBar';
+import Header from './components/Header';
 
 function App() {
   return (
     <div className="App">
       <div className="App-body">
-        <TopBar />
+        <Header />
         <Grid />
         Keyboard
       </div>
