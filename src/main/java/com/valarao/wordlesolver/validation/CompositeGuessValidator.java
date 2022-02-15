@@ -3,25 +3,36 @@ package com.valarao.wordlesolver.validation;
 import com.valarao.wordlesolver.model.PastGuess;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
 /**
- * Implementation of a GuessValidator to perform all validation checks.
+ * Implementation of a GuessValidator to perform validation checks over multiple validators.
  */
 @RequiredArgsConstructor
-public class CompositeGuessValidator {
-    @NonNull
-    @Qualifier("argumentLengthValidator")
-    private GuessValidator argumentLengthValidator;
+public class CompositeGuessValidator extends GuessValidator {
 
     @NonNull
-    @Qualifier("guessWordValidator")
-    private GuessValidator guessWordValidator;
+    List<GuessValidator> validators;
 
-//    @Override
-//    public boolean validate(List<PastGuess> guesses) {
-//        return argumentLengthValidator.validate(guesses) && guessWordValidator.validate(guesses);
-//    }
+    @Override
+    protected boolean isValid(PastGuess guess) {
+        for (GuessValidator validator : validators) {
+            if (!validator.isValid(guess)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    protected String getSuccessMessage() {
+        return "Guess validation succeeded.";
+    }
+
+    @Override
+    protected String getErrorMessage() {
+        return "Guess validation failed.";
+    }
 }

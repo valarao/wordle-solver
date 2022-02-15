@@ -1,33 +1,31 @@
 package com.valarao.wordlesolver.validation;
 
-import com.valarao.wordlesolver.loader.WordDatasetLoader;
 import com.valarao.wordlesolver.model.PastGuess;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
  * Implementation of a GuessValidator to check if guess words are included in the complete set.
  */
 @RequiredArgsConstructor
-public class GuessWordValidator {
+public class GuessWordValidator extends GuessValidator {
     @NonNull
-    @Qualifier("fullWordDatasetLoader")
-    private WordDatasetLoader wordDatasetLoader;
+    private Set<String> fullWordDataset;
 
-//    @Override
-    public boolean validate(List<PastGuess> guesses) {
-        Set<String> words = new HashSet<>(wordDatasetLoader.load());
-        for (PastGuess guess : guesses) {
-            if (!words.contains(guess.getGuessWord())) {
-                return false;
-            }
-        }
+    @Override
+    protected boolean isValid(PastGuess guess) {
+        return fullWordDataset.contains(guess.getGuessWord());
+    }
 
-        return true;
+    @Override
+    protected String getSuccessMessage() {
+        return "Guess word validation succeeded.";
+    }
+
+    @Override
+    protected String getErrorMessage() {
+        return "Guess word validation failed.";
     }
 }
