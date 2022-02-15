@@ -26,6 +26,7 @@ import com.valarao.wordlesolver.validation.GuessValidator;
 import com.valarao.wordlesolver.validation.GuessWordValidator;
 import com.valarao.wordlesolver.validation.WordCorrectnessValidator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -141,6 +142,7 @@ public class CalculateInformationScoresIntegrationTest {
     }
 
     @Test
+    @Disabled
     public void test_TargetCREPE_GuessSASSY() {
         String target = "CREPE";
         List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
