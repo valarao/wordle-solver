@@ -18,6 +18,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -111,8 +113,8 @@ public class ScoreControllerTest {
     @Test
     public void testCalculateInformationScores_Success() {
         when(wordDatasetLoader.load()).thenReturn(ALL_WORDS);
-        when(predictiveScoreCalculator.calculate(ALL_WORDS, PAST_GUESSES)).thenReturn(PREDICTIVE_SCORES);
-        when(retrospectiveScoreCalculator.calculate(ALL_WORDS, PAST_GUESSES)).thenReturn(RETROSPECTIVE_SCORES);
+        when(predictiveScoreCalculator.calculate(eq(ALL_WORDS), anyList())).thenReturn(PREDICTIVE_SCORES);
+        when(retrospectiveScoreCalculator.calculate(eq(ALL_WORDS), anyList())).thenReturn(RETROSPECTIVE_SCORES);
         CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
                 .guesses(PAST_GUESSES)
                 .build();
@@ -123,7 +125,7 @@ public class ScoreControllerTest {
     }
 
     @Test
-    public void testCalculateInformationScores_Guess() {
+    public void testCalculateInformationScores_NoGuesses() {
         CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
                 .guesses(new ArrayList<>())
                 .build();

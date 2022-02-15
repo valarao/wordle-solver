@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 public class PredictiveScore {
 
     @JsonProperty("guessWord")
-    String guessWord;
+    private String guessWord;
 
     @JsonProperty("expectedValue")
-    Double expectedValue;
+    private Double expectedValue;
 }

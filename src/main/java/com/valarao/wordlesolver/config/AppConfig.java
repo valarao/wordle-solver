@@ -43,9 +43,15 @@ public class AppConfig {
         return new SingleStageCandidateFilterer();
     }
 
-    @Bean
-    public WordDatasetLoader wordDatasetLoader() {
+    @Bean(name="reducedWordDatasetLoader")
+    public WordDatasetLoader reducedWordDatasetLoader() {
         String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words.txt";
+        return new TextFileWordDatasetLoader(file);
+    }
+
+    @Bean(name="fullWordDatasetLoader")
+    public WordDatasetLoader fullWordDatasetLoader() {
+        String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words_complete.txt";
         return new TextFileWordDatasetLoader(file);
     }
 

@@ -12,12 +12,15 @@ import com.valarao.wordlesolver.model.RetrospectiveScore;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Controller managing the endpoint to calculate information scores for candidate guesses.
@@ -29,6 +32,7 @@ public class ScoreController {
 
     @Autowired
     @NonNull
+    @Qualifier("reducedWordDatasetLoader")
     private final WordDatasetLoader wordDatasetLoader;
 
     @Autowired
@@ -52,8 +56,7 @@ public class ScoreController {
     public CalculateInformationScoresResponse calculateInformationScores(
             @RequestBody CalculateInformationScoresRequest request) {
         List<String> allWords = wordDatasetLoader.load();
-        List<PastGuess> guesses = request.getGuesses();
-
+        List<PastGuess> guesses = convertGuessWordsToUpperCase(request.getGuesses());
         if (guesses.isEmpty()) {
             return cacheManager.getScores();
         }
@@ -64,5 +67,13 @@ public class ScoreController {
                 .predictiveScores(predictiveScoreCalculator.calculate(allWords, guesses))
                 .retrospectiveScores(retrospectiveScoreCalculator.calculate(allWords, guesses))
                 .build();
+    }
+
+    private List<PastGuess> convertGuessWordsToUpperCase(List<PastGuess> guesses) {
+        return guesses.stream()
+                .map(pastGuess -> pastGuess.toBuilder()
+                        .guessWord(pastGuess.getGuessWord().toUpperCase(Locale.ROOT))
+                        .build())
+                .collect(Collectors.toList());
     }
 }

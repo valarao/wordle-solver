@@ -18,11 +18,11 @@ import java.util.List;
 public class CalculateInformationScoresResponse {
 
     @JsonProperty("topWord")
-    String topWord;
+    private String topWord;
 
     @JsonProperty("predictiveScores")
-    List<PredictiveScore> predictiveScores;
+    private List<PredictiveScore> predictiveScores;
 
     @JsonProperty("retrospectiveScores")
-    List<RetrospectiveScore> retrospectiveScores;
+    private List<RetrospectiveScore> retrospectiveScores;
 }

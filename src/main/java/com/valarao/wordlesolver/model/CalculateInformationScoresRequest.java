@@ -18,5 +18,5 @@ import java.util.List;
 public class CalculateInformationScoresRequest {
 
     @JsonProperty("guesses")
-    List<PastGuess> guesses;
+    private List<PastGuess> guesses;
 }
