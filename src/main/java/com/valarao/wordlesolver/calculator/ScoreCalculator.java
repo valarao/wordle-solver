@@ -17,7 +17,7 @@ public abstract class ScoreCalculator<T> {
 
     /***
      *
-     * @param allWords List of all words considered to guess.
+     * @param allWords List of all words considered guessing.
      * @param pastGuesses List of past Wordle guesses given by an application user.
      * @return Calculated scores.
      */

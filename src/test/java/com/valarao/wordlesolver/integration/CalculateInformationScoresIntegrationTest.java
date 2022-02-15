@@ -53,8 +53,6 @@ public class CalculateInformationScoresIntegrationTest {
 
     private WordDatasetLoader wordDatasetLoader;
 
-    private GuessValidator guessValidator;
-
     private ScoreController scoreController;
 
     @BeforeEach
@@ -63,7 +61,7 @@ public class CalculateInformationScoresIntegrationTest {
         CacheManager cacheManager = new JSONCacheManager(new ObjectMapper(), CACHED_FILE);
         permutationGenerator = new CorrectnessPermutationGenerator(WORD_LENGTH, CORRECTNESS_POSSIBILITIES);
         candidateFilterer = new SingleStageCandidateFilterer();
-        guessValidator = setupGuessValidator();
+        GuessValidator guessValidator = setupGuessValidator();
         ScoreCalculator<PredictiveScore> predictiveScoreCalculator = createPredictiveScoreCalculator();
         ScoreCalculator<RetrospectiveScore> retrospectiveScoreCalculator = createRetrospectiveScoreCalculator();
         scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator,
@@ -136,6 +134,22 @@ public class CalculateInformationScoresIntegrationTest {
                         LetterCorrectness.VALID,
                         LetterCorrectness.PLACED,
                         LetterCorrectness.VALID,
+                        LetterCorrectness.WRONG))
+                .build());
+
+        assertTrue(isTargetInPrediction(target, guesses));
+    }
+
+    @Test
+    public void test_TargetCREPE_GuessSASSY() {
+        String target = "CREPE";
+        List<PastGuess> guesses = ImmutableList.of(PastGuess.builder()
+                .guessWord("SASSY")
+                .wordCorrectness(ImmutableList.of(
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.WRONG,
                         LetterCorrectness.WRONG))
                 .build());
 
