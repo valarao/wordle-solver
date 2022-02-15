@@ -9,8 +9,12 @@ import com.valarao.wordlesolver.model.PastGuess;
 import com.valarao.wordlesolver.model.PredictiveScore;
 import com.valarao.wordlesolver.model.RetrospectiveScore;
 
+import com.valarao.wordlesolver.model.ValidationResult;
+import com.valarao.wordlesolver.validation.InputValidationException;
+import com.valarao.wordlesolver.validation.GuessValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Slf4j
 public class ScoreController {
 
     @Autowired
@@ -47,6 +52,11 @@ public class ScoreController {
     @NonNull
     private final CacheManager cacheManager;
 
+    @Autowired
+    @NonNull
+    @Qualifier("compositeGuessValidator")
+    private final GuessValidator guessValidator;
+
     /***
      *
      * @param request Request with past guesses made.
@@ -55,6 +65,8 @@ public class ScoreController {
     @PostMapping("/scores")
     public CalculateInformationScoresResponse calculateInformationScores(
             @RequestBody CalculateInformationScoresRequest request) {
+        validateGuesses(request.getGuesses());
+
         List<String> allWords = wordDatasetLoader.load();
         List<PastGuess> guesses = convertGuessWordsToUpperCase(request.getGuesses());
         if (guesses.isEmpty()) {
@@ -75,5 +87,13 @@ public class ScoreController {
                         .guessWord(pastGuess.getGuessWord().toUpperCase(Locale.ROOT))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private void validateGuesses(List<PastGuess> guesses) throws InputValidationException {
+        ValidationResult validationResult = guessValidator.validateAll(guesses);
+        if (!validationResult.isValid()) {
+            log.error(validationResult.getMessage());
+            throw new InputValidationException(validationResult.getMessage());
+        }
     }
 }

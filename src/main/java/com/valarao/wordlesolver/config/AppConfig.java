@@ -51,19 +51,19 @@ public class AppConfig {
         return new SingleStageCandidateFilterer();
     }
 
-    @Bean(name="reducedWordDatasetLoader")
+    @Bean(name = "reducedWordDatasetLoader")
     public WordDatasetLoader reducedWordDatasetLoader() {
         String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words.txt";
         return new TextFileWordDatasetLoader(file);
     }
 
-    @Bean(name="fullWordDatasetLoader")
+    @Bean(name = "fullWordDatasetLoader")
     public WordDatasetLoader fullWordDatasetLoader() {
         String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words_complete.txt";
         return new TextFileWordDatasetLoader(file);
     }
 
-    @Bean(name="fullWordDataset")
+    @Bean(name = "fullWordDataset")
     public Set<String> fullWordDataset(@Qualifier("fullWordDatasetLoader") WordDatasetLoader fullWordDatasetLoader) {
         return new HashSet<>(fullWordDatasetLoader.load());
     }
