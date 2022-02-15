@@ -10,6 +10,9 @@ import com.valarao.wordlesolver.model.LetterCorrectness;
 import com.valarao.wordlesolver.model.PastGuess;
 import com.valarao.wordlesolver.model.PredictiveScore;
 import com.valarao.wordlesolver.model.RetrospectiveScore;
+import com.valarao.wordlesolver.model.ValidationResult;
+import com.valarao.wordlesolver.validation.GuessValidator;
+import com.valarao.wordlesolver.validation.InputValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,6 +21,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -100,19 +106,23 @@ public class ScoreControllerTest {
     @Mock
     private CacheManager cacheManager;
 
+    @Mock
+    private GuessValidator guessValidator;
+
     private ScoreController scoreController;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator, cacheManager);
+        when(guessValidator.validateAll(anyList())).thenReturn(ValidationResult.builder().isValid(true).build());
+        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator, cacheManager, guessValidator);
     }
 
     @Test
     public void testCalculateInformationScores_Success() {
         when(wordDatasetLoader.load()).thenReturn(ALL_WORDS);
-        when(predictiveScoreCalculator.calculate(ALL_WORDS, PAST_GUESSES)).thenReturn(PREDICTIVE_SCORES);
-        when(retrospectiveScoreCalculator.calculate(ALL_WORDS, PAST_GUESSES)).thenReturn(RETROSPECTIVE_SCORES);
+        when(predictiveScoreCalculator.calculate(eq(ALL_WORDS), anyList())).thenReturn(PREDICTIVE_SCORES);
+        when(retrospectiveScoreCalculator.calculate(eq(ALL_WORDS), anyList())).thenReturn(RETROSPECTIVE_SCORES);
         CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
                 .guesses(PAST_GUESSES)
                 .build();
@@ -123,7 +133,7 @@ public class ScoreControllerTest {
     }
 
     @Test
-    public void testCalculateInformationScores_Guess() {
+    public void testCalculateInformationScores_NoGuesses() {
         CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
                 .guesses(new ArrayList<>())
                 .build();
@@ -137,5 +147,15 @@ public class ScoreControllerTest {
         when(cacheManager.getScores()).thenReturn(expectedResponse);
         CalculateInformationScoresResponse actualResponse = scoreController.calculateInformationScores(request);
         assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    public void testCalculateInformationScores_FailedValidation() {
+        CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
+                .guesses(new ArrayList<>())
+                .build();
+
+        when(guessValidator.validateAll(anyList())).thenReturn(ValidationResult.builder().isValid(false).build());
+        assertThrows(InputValidationException.class, () -> scoreController.calculateInformationScores(request));
     }
 }

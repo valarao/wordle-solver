@@ -14,12 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class PastGuess {
 
     @JsonProperty("guessWord")
-    String guessWord;
+    private String guessWord;
 
     @JsonProperty("wordCorrectness")
-    List<LetterCorrectness> wordCorrectness;
+    private List<LetterCorrectness> wordCorrectness;
 }

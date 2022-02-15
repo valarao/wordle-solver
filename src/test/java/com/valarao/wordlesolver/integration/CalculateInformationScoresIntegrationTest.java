@@ -20,11 +20,17 @@ import com.valarao.wordlesolver.model.LetterCorrectness;
 import com.valarao.wordlesolver.model.PastGuess;
 import com.valarao.wordlesolver.model.PredictiveScore;
 import com.valarao.wordlesolver.model.RetrospectiveScore;
+import com.valarao.wordlesolver.validation.ArgumentLengthValidator;
+import com.valarao.wordlesolver.validation.CompositeGuessValidator;
+import com.valarao.wordlesolver.validation.GuessValidator;
+import com.valarao.wordlesolver.validation.GuessWordValidator;
+import com.valarao.wordlesolver.validation.WordCorrectnessValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,17 +51,23 @@ public class CalculateInformationScoresIntegrationTest {
 
     private PermutationGenerator<LetterCorrectness> permutationGenerator;
 
+    private WordDatasetLoader wordDatasetLoader;
+
+    private GuessValidator guessValidator;
+
     private ScoreController scoreController;
 
     @BeforeEach
     public void setup() {
-        WordDatasetLoader wordDatasetLoader = new TextFileWordDatasetLoader(WORDS_FILE);
+        wordDatasetLoader = new TextFileWordDatasetLoader(WORDS_FILE);
         CacheManager cacheManager = new JSONCacheManager(new ObjectMapper(), CACHED_FILE);
         permutationGenerator = new CorrectnessPermutationGenerator(WORD_LENGTH, CORRECTNESS_POSSIBILITIES);
         candidateFilterer = new SingleStageCandidateFilterer();
+        guessValidator = setupGuessValidator();
         ScoreCalculator<PredictiveScore> predictiveScoreCalculator = createPredictiveScoreCalculator();
         ScoreCalculator<RetrospectiveScore> retrospectiveScoreCalculator = createRetrospectiveScoreCalculator();
-        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator, cacheManager);
+        scoreController = new ScoreController(wordDatasetLoader, predictiveScoreCalculator, retrospectiveScoreCalculator,
+                cacheManager, guessValidator);
     }
 
     @Test
@@ -152,5 +164,14 @@ public class CalculateInformationScoresIntegrationTest {
         retrospectiveScoreCalculator.setCandidateFilterer(candidateFilterer);
         retrospectiveScoreCalculator.setPermutationGenerator(permutationGenerator);
         return retrospectiveScoreCalculator;
+    }
+
+    private GuessValidator setupGuessValidator() {
+        GuessValidator subValidator1 = new ArgumentLengthValidator();
+        GuessValidator subValidator2 = new GuessWordValidator(new HashSet<>(wordDatasetLoader.load()));
+        GuessValidator subValidator3 = new WordCorrectnessValidator();
+
+        List<GuessValidator> validators = ImmutableList.of(subValidator1, subValidator2, subValidator3);
+        return new CompositeGuessValidator(validators);
     }
 }

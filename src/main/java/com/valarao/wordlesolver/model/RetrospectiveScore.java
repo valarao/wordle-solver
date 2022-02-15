@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class RetrospectiveScore {
 
     @JsonProperty("pastGuess")
-    PastGuess pastGuess;
+    private PastGuess pastGuess;
 
     @JsonProperty("actualValue")
-    Double actualValue;
+    private Double actualValue;
 
     @JsonProperty("expectedValue")
-    Double expectedValue;
+    private Double expectedValue;
 }
