@@ -12,12 +12,10 @@ const Keyboard = () => {
         for (let rowIndex = 0; rowIndex < KEYBOARD_LETTER_ROWS.length; rowIndex += 1) {
             rows.push(<KeyboardRow
                 rowLetters={KEYBOARD_LETTER_ROWS[rowIndex]}
+                key={rowIndex}
                 isLastRow={rowIndex === KEYBOARD_LETTER_ROWS.length - 1} />);
         }
 
-        
-
-        console.log(rows);
         return rows;
     }
 

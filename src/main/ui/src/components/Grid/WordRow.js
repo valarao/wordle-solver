@@ -6,7 +6,7 @@ import { WORD_LENGTH } from "../../util/constants";
 const renderRows = () => {
     const rows = [];
     for (let currentLetter = 0; currentLetter < WORD_LENGTH; currentLetter += 1) {
-        rows.push(<LetterCell />);
+        rows.push(<LetterCell key={currentLetter} />);
     }
 
     return rows;
