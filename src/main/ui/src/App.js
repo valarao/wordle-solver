@@ -6,6 +6,7 @@ import Keyboard from './components/Keyboard/Keyboard';
 import Recommendation from './components/Recommendation/Recommendation';
 
 function App() {
+  const [guessIndex, setGuessIndex] = useState(0);
   const [userGuess, setUserGuess] = useState("");
   const handleUserKeyPress = useCallback(event => {
     const { key, keyCode } = event;
@@ -31,8 +32,11 @@ function App() {
       <div className="App-body">
         <Header />
         <Recommendation />
-        <Grid userGuess={userGuess} />
-        <Keyboard />
+        <Grid
+          userGuess={userGuess}
+          guessIndex={guessIndex}
+        />
+        <Keyboard setGuessIndex={setGuessIndex} />
       </div>
     </div>
   );

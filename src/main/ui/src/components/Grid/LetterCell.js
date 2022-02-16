@@ -1,9 +1,9 @@
 import './Grid.css';
 
-const LetterCell = () => {
+const LetterCell = ({letter}) => {
     return (
         <div className='LetterCell'>
-            F
+            {letter}
         </div>
     );
 }
