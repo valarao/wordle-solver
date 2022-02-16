@@ -1,0 +1,14 @@
+.Header {
+    font-weight: bold;
+    width: 100%;
+}
+
+.Header-content {
+    margin-top: 5px;
+    padding: 2px 0;
+}
+
+hr {
+	border: 0;
+	border-top: 1px solid #2d333b;
+}

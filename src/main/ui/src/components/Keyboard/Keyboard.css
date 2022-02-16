@@ -1,0 +1,35 @@
+.Keyboard {
+    width: min(95vw, 400px);
+    margin-top: 20px;
+}
+
+.KeyboardRow {
+    margin-bottom: 25px;
+}
+
+.Key {
+    font-size: calc(10px + 0.3vmin);
+    background-color: #2d333b;
+    padding: calc(6px + 1vmin);
+    margin: 0px 3px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.SolveKey {
+    font-size: calc(10px + 0.3vmin);
+    background-color: green;
+    padding: calc(6px + 1vmin) 2px;
+    margin: 0px 3px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.DeleteKey{
+    font-size: calc(10px + 0.3vmin);
+    background-color: darkred;
+    padding: calc(6px + 1vmin) 2px;
+    margin: 0px 3px;
+    border-radius: 4px;
+    cursor: pointer;
+}
