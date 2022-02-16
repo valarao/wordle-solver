@@ -1,8 +1,16 @@
 import './Keyboard.css';
 
-const Key = ({letter}) => {
+import { WORD_LENGTH } from '../../util/constants';
+
+const Key = ({letter, userGuess, setUserGuess}) => {
+    const handlePressLetterKey = () => {
+        if (userGuess.length < WORD_LENGTH) {
+            setUserGuess(userGuess.concat(letter));
+        }
+    }    
+
     return (
-        <span className='Key'>
+        <span className='Key' onClick={handlePressLetterKey}>
             {letter}
         </span>
     );
