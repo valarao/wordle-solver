@@ -96,7 +96,7 @@ public class AppConfig {
     }
 
     @Bean(name = "guessWordValidator")
-    public GuessValidator guessWordValidator(@Qualifier("fullWordDatasetLoader") Set<String> fullWordDataset) {
+    public GuessValidator guessWordValidator(@Qualifier("fullWordDataset") Set<String> fullWordDataset) {
         return new GuessWordValidator(fullWordDataset);
     }
 

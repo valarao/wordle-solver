@@ -1,9 +1,11 @@
 import './Recommendation.css';
 
-const Recommendation = () => {
+const Recommendation = ({recommendation}) => {
+    const displayString = recommendation === '' ? 'No more recommendations left!' : `Recommendation Guess: ${recommendation}`;
+
     return (
         <div className='Recommendation'>
-            Recommendation Guess: YUMMY
+            {displayString}
         </div>
     );
 }

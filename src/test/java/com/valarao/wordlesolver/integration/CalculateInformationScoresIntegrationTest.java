@@ -142,6 +142,38 @@ public class CalculateInformationScoresIntegrationTest {
     }
 
     @Test
+    public void test_TargetCAULK_GuessRAISETANGYCACAO() {
+        String target = "CAULK";
+        List<PastGuess> guesses = ImmutableList.of(
+                PastGuess.builder().guessWord("RAISE")
+                .wordCorrectness(ImmutableList.of(
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.PLACED,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.WRONG,
+                        LetterCorrectness.WRONG))
+                .build(),
+                PastGuess.builder().guessWord("TANGY")
+                        .wordCorrectness(ImmutableList.of(
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.PLACED,
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG))
+                        .build(),
+                PastGuess.builder().guessWord("CACAO")
+                        .wordCorrectness(ImmutableList.of(
+                                LetterCorrectness.PLACED,
+                                LetterCorrectness.PLACED,
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG,
+                                LetterCorrectness.WRONG))
+                        .build());
+
+        assertTrue(isTargetInPrediction(target, guesses));
+    }
+
+    @Test
     @Disabled
     public void test_TargetCREPE_GuessSASSY() {
         String target = "CREPE";

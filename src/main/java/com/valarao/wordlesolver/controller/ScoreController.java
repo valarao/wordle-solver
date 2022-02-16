@@ -75,7 +75,7 @@ public class ScoreController {
 
         List<PredictiveScore> predictiveScores = predictiveScoreCalculator.calculate(allWords, guesses);
         return CalculateInformationScoresResponse.builder()
-                .topWord(predictiveScores.get(predictiveScores.size() - 1).getGuessWord())
+                .topWord(predictiveScores.isEmpty() ? "" : predictiveScores.get(predictiveScores.size() - 1).getGuessWord())
                 .predictiveScores(predictiveScoreCalculator.calculate(allWords, guesses))
                 .retrospectiveScores(retrospectiveScoreCalculator.calculate(allWords, guesses))
                 .build();

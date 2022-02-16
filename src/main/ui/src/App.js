@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { getTopWord } from './actions/dataActions';
 import './App.css';
 import Grid from './components/Grid/Grid';
 import Header from './components/Header';
@@ -10,6 +11,7 @@ function App() {
   const [guessIndex, setGuessIndex] = useState(0);
   const [previousGuesses, setPreviousGuesses] = useState([]);
   const [userGuess, setUserGuess] = useState("");
+  const [recommendation, setRecommendation] = useState('RAISE');
   const [wordCorrectness, setWordCorrectness] = useState({
     previous: [],
     current: [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG],
@@ -24,13 +26,24 @@ function App() {
         return prevUserGuess.substring(0, prevUserGuess.length - 1);
       } else if (keyCode === 13 && userGuess.length === WORD_LENGTH) {
         if (guessIndex < NUMBER_OF_ATTEMPTS - 1) {
+          const guessWords = [...previousGuesses, userGuess];
           setGuessIndex(guessIndex + 1);
-          setPreviousGuesses([...previousGuesses, userGuess]);
+          setPreviousGuesses(guessWords);
 
           const newWordCorrectness = {...wordCorrectness};
-          newWordCorrectness.previous.push(wordCorrectness.current);
+          newWordCorrectness.previous = [...newWordCorrectness.previous, [...wordCorrectness.current]]
           newWordCorrectness.current = [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG];
           setWordCorrectness(newWordCorrectness);
+
+          const requestGuesses = [];
+          for (let i = 0; i < guessWords.length; i++) {
+            requestGuesses.push({
+              guessWord: guessWords[i],
+              wordCorrectness: newWordCorrectness.previous[i],
+            });
+          }
+
+          getTopWord(requestGuesses, setRecommendation);
         } else {
           setGuessIndex(0);
           setPreviousGuesses([]);
@@ -53,7 +66,7 @@ function App() {
     <div className="App">
       <div className="App-body">
         <Header />
-        <Recommendation />
+        <Recommendation recommendation={recommendation} />
         <Grid
           userGuess={userGuess}
           guessIndex={guessIndex}
@@ -70,6 +83,7 @@ function App() {
           setPreviousGuesses={setPreviousGuesses}
           wordCorrectness={wordCorrectness}
           setWordCorrectness={setWordCorrectness}
+          setRecommendation={setRecommendation}
         />
       </div>
     </div>
