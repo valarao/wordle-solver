@@ -14,6 +14,11 @@
     margin: 0px 3px;
     border-radius: 4px;
     cursor: pointer;
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 .SolveKey {
@@ -23,13 +28,23 @@
     margin: 0px 3px;
     border-radius: 4px;
     cursor: pointer;
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
-.DeleteKey{
+.DeleteKey {
     font-size: calc(10px + 0.3vmin);
     background-color: darkred;
     padding: calc(6px + 1vmin) 2px;
     margin: 0px 3px;
     border-radius: 4px;
     cursor: pointer;
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
 }

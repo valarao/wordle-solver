@@ -4,12 +4,16 @@ import Grid from './components/Grid/Grid';
 import Header from './components/Header';
 import Keyboard from './components/Keyboard/Keyboard';
 import Recommendation from './components/Recommendation/Recommendation';
-import { NUMBER_OF_ATTEMPTS, WORD_LENGTH } from './util/constants';
+import { CORRECTNESS, NUMBER_OF_ATTEMPTS, WORD_LENGTH } from './util/constants';
 
 function App() {
   const [guessIndex, setGuessIndex] = useState(0);
   const [previousGuesses, setPreviousGuesses] = useState([]);
   const [userGuess, setUserGuess] = useState("");
+  const [wordCorrectness, setWordCorrectness] = useState({
+    previous: [],
+    current: [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG],
+  });
   const handleUserKeyPress = useCallback(event => {
     const { key, keyCode } = event;
 
@@ -22,15 +26,21 @@ function App() {
         if (guessIndex < NUMBER_OF_ATTEMPTS - 1) {
           setGuessIndex(guessIndex + 1);
           setPreviousGuesses([...previousGuesses, userGuess]);
-      } else {
+
+          const newWordCorrectness = {...wordCorrectness};
+          newWordCorrectness.previous.push(wordCorrectness.current);
+          newWordCorrectness.current = [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG];
+          setWordCorrectness(newWordCorrectness);
+        } else {
           setGuessIndex(0);
           setPreviousGuesses([]);
-      }
+        }
         return '';
       } else {
         return prevUserGuess;
-      }});
-  }, [guessIndex, previousGuesses, userGuess]);
+      }
+    });
+  }, [guessIndex, previousGuesses, userGuess, wordCorrectness]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress);
@@ -48,6 +58,8 @@ function App() {
           userGuess={userGuess}
           guessIndex={guessIndex}
           previousGuesses={previousGuesses}
+          wordCorrectness={wordCorrectness}
+          setWordCorrectness={setWordCorrectness}
         />
         <Keyboard
           userGuess={userGuess}
@@ -56,6 +68,8 @@ function App() {
           setGuessIndex={setGuessIndex}
           previousGuesses={previousGuesses}
           setPreviousGuesses={setPreviousGuesses}
+          wordCorrectness={wordCorrectness}
+          setWordCorrectness={setWordCorrectness}
         />
       </div>
     </div>
