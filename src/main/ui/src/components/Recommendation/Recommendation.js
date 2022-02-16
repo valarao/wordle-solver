@@ -7,5 +7,5 @@ const Recommendation = () => {
         </div>
     );
 }
- 
+
 export default Recommendation;

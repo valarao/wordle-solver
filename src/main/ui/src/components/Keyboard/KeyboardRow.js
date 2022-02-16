@@ -6,7 +6,7 @@ const KeyboardRow = ({rowLetters, isLastRow}) => {
     return (
         <div className='KeyboardRow'>
             {isLastRow && <SolveKey />}
-            {rowLetters.map(letter => <Key letter={letter}/>)}
+            {rowLetters.map(letter => <Key letter={letter} key={letter}/>)}
             {isLastRow && <DeleteKey />}
         </div>
     );
