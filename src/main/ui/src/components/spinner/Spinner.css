@@ -1,0 +1,22 @@
+.Spinner {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #b59f3b;
+    border-right: 16px solid #2d333b;
+    border-bottom: 16px solid #538d4e;
+    border-radius: 50%;
+    width: calc(50px + 10vmin);
+    height: calc(50px + 10vmin);
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+.Spinner-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70vh;
+}

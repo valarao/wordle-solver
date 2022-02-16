@@ -1,5 +1,6 @@
-export const getTopWord = async (guesses, setRecommendation) => {
+export const getTopWord = async (guesses, setRecommendation, setIsLoading) => {
     try {
+        setIsLoading(true);
         const response = await fetch('/api/scores', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -7,7 +8,9 @@ export const getTopWord = async (guesses, setRecommendation) => {
         })
         const data = await response.json();
         setRecommendation(data.topWord);
+        setIsLoading(false);
     } catch (error) {
         console.log(error);
+        setIsLoading(false);
     }
 }
