@@ -18,4 +18,21 @@
     align-items: center;
     font-size: calc(25px + 2vmin);
     cursor: pointer;
+    user-select: none; /* supported by Chrome and Opera */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.LetterCell-wrong {
+    background-color: #2d333b;
+}
+
+.LetterCell-valid {
+    background-color: #b59f3b;
+}
+
+.LetterCell-placed {
+    background-color: #538d4e;
 }
