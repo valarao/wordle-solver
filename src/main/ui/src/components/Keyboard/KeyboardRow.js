@@ -2,7 +2,20 @@ import DeleteKey from "./DeleteKey";
 import Key from "./Key";
 import SolveKey from "./SolveKey";
 
-const KeyboardRow = ({ rowLetters, isLastRow, guessIndex, setGuessIndex, previousGuesses, setPreviousGuesses, userGuess, setUserGuess, wordCorrectness, setWordCorrectness, setRecommendation }) => {
+const KeyboardRow = ({
+    rowLetters,
+    isLastRow,
+    guessIndex,
+    setGuessIndex,
+    previousGuesses,
+    setPreviousGuesses,
+    userGuess,
+    setUserGuess,
+    wordCorrectness,
+    setWordCorrectness,
+    setRecommendation,
+    setIsLoading,
+}) => {
     return (
         <div className='KeyboardRow'>
             {isLastRow &&
@@ -16,6 +29,7 @@ const KeyboardRow = ({ rowLetters, isLastRow, guessIndex, setGuessIndex, previou
                     wordCorrectness={wordCorrectness}
                     setWordCorrectness={setWordCorrectness}
                     setRecommendation={setRecommendation}
+                    setIsLoading={setIsLoading}
                 />}
             {rowLetters.map(letter => <Key letter={letter} key={letter} userGuess={userGuess} setUserGuess={setUserGuess} />)}
             {isLastRow &&

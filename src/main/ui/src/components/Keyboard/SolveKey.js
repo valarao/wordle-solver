@@ -3,7 +3,18 @@ import './Keyboard.css';
 import { WORD_LENGTH, NUMBER_OF_ATTEMPTS, CORRECTNESS } from '../../util/constants';
 import { getTopWord } from '../../actions/dataActions';
 
-const SolveKey = ({ guessIndex, setGuessIndex, previousGuesses, setPreviousGuesses, userGuess, setUserGuess, wordCorrectness, setWordCorrectness, setRecommendation }) => {    
+const SolveKey = ({
+    guessIndex,
+    setGuessIndex,
+    previousGuesses,
+    setPreviousGuesses,
+    userGuess,
+    setUserGuess,
+    wordCorrectness,
+    setWordCorrectness,
+    setRecommendation,
+    setIsLoading,
+}) => {    
     const handlePressSolveKey = () => {
         if (userGuess.length === WORD_LENGTH) {
             setUserGuess('');
@@ -25,7 +36,7 @@ const SolveKey = ({ guessIndex, setGuessIndex, previousGuesses, setPreviousGuess
                   });
                 }
       
-                getTopWord(requestGuesses, setRecommendation);
+                getTopWord(requestGuesses, setRecommendation, setIsLoading);
             } else {
                 setGuessIndex(0);
                 setPreviousGuesses([]);

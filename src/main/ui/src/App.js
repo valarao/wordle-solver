@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopWord } from './actions/dataActions';
 import './App.css';
-import Grid from './components/Grid/Grid';
+import Grid from './components/grid/Grid';
 import Header from './components/Header';
-import Keyboard from './components/Keyboard/Keyboard';
-import Recommendation from './components/Recommendation/Recommendation';
+import Keyboard from './components/keyboard/Keyboard';
+import Recommendation from './components/recommendation/Recommendation';
+import Spinner from './components/spinner/Spinner';
 import { CORRECTNESS, NUMBER_OF_ATTEMPTS, WORD_LENGTH } from './util/constants';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
   const [guessIndex, setGuessIndex] = useState(0);
   const [previousGuesses, setPreviousGuesses] = useState([]);
   const [userGuess, setUserGuess] = useState("");
@@ -43,7 +45,7 @@ function App() {
             });
           }
 
-          getTopWord(requestGuesses, setRecommendation);
+          getTopWord(requestGuesses, setRecommendation, setIsLoading);
         } else {
           setGuessIndex(0);
           setPreviousGuesses([]);
@@ -66,6 +68,9 @@ function App() {
     <div className="App">
       <div className="App-body">
         <Header />
+        {isLoading ?
+        <Spinner />
+        : <>
         <Recommendation recommendation={recommendation} />
         <Grid
           userGuess={userGuess}
@@ -84,7 +89,9 @@ function App() {
           wordCorrectness={wordCorrectness}
           setWordCorrectness={setWordCorrectness}
           setRecommendation={setRecommendation}
+          setIsLoading={setIsLoading}
         />
+        </>}
       </div>
     </div>
   );
