@@ -158,4 +158,19 @@ public class ScoreControllerTest {
         when(guessValidator.validateAll(anyList())).thenReturn(ValidationResult.builder().isValid(false).build());
         assertThrows(InputValidationException.class, () -> scoreController.calculateInformationScores(request));
     }
+
+    @Test
+    public void testCalculateInformationScores_NoPredictions() {
+        when(wordDatasetLoader.load()).thenReturn(ALL_WORDS);
+        when(predictiveScoreCalculator.calculate(eq(ALL_WORDS), anyList())).thenReturn(new ArrayList<>());
+        when(retrospectiveScoreCalculator.calculate(eq(ALL_WORDS), anyList())).thenReturn(RETROSPECTIVE_SCORES);
+        CalculateInformationScoresRequest request = CalculateInformationScoresRequest.builder()
+                .guesses(PAST_GUESSES)
+                .build();
+
+        CalculateInformationScoresResponse actualResponse = scoreController.calculateInformationScores(request);
+        assertEquals("", actualResponse.getTopWord());
+        assertEquals(new ArrayList<>(), actualResponse.getPredictiveScores());
+        assertEquals(RETROSPECTIVE_SCORES, actualResponse.getRetrospectiveScores());
+    }
 }
