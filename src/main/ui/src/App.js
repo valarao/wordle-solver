@@ -1,6 +1,7 @@
 import './App.css';
-import Grid from './components/Grid';
+import Grid from './components/Grid/Grid';
 import Header from './components/Header';
+import Keyboard from './components/Keyboard/Keyboard';
 
 function App() {
   return (
@@ -8,7 +9,7 @@ function App() {
       <div className="App-body">
         <Header />
         <Grid />
-        Keyboard
+        <Keyboard />
       </div>
     </div>
   );

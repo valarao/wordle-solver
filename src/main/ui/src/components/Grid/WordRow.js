@@ -1,7 +1,7 @@
 import './Grid.css';
 
 import LetterCell from "./LetterCell";
-import { WORD_LENGTH } from "../util/constants";
+import { WORD_LENGTH } from "../../util/constants";
 
 const renderRows = () => {
     const rows = [];

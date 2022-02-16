@@ -1,7 +1,7 @@
 import './Grid.css';
 
 import WordRow from "./WordRow";
-import { NUMBER_OF_ATTEMPTS } from "../util/constants";
+import { NUMBER_OF_ATTEMPTS } from "../../util/constants";
 
 const renderRows = () => {
     const rows = [];

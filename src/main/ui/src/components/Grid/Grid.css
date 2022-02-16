@@ -17,4 +17,5 @@
     justify-content: center;
     align-items: center;
     font-size: calc(25px + 2vmin);
+    cursor: pointer;
 }
