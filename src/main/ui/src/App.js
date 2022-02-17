@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getTopWord } from './actions/dataActions';
 import './App.css';
-import Grid from './components/grid/Grid';
+// import Grid from './components/grid/Grid';
 import Header from './components/Header';
 import Keyboard from './components/keyboard/Keyboard';
 import GuessModal from './components/modal/GuessModal';
@@ -74,13 +74,13 @@ function App() {
           recommendation={recommendation}
           invalidGuess={invalidGuess}
         />
-        <Grid
+        {/* <Grid
           userGuess={userGuess}
           guessIndex={guessIndex}
           previousGuesses={previousGuesses}
           wordCorrectness={wordCorrectness}
           setWordCorrectness={setWordCorrectness}
-        />
+        /> */}
         <Keyboard
           userGuess={userGuess}
           setUserGuess={setUserGuess}
