@@ -70,7 +70,10 @@ function App() {
         {isLoading ?
         <Spinner />
         : <>
-        <Recommendation recommendation={recommendation} invalidGuess={invalidGuess} />
+        <Recommendation
+          recommendation={recommendation}
+          invalidGuess={invalidGuess}
+        />
         <Grid
           userGuess={userGuess}
           guessIndex={guessIndex}
@@ -99,6 +102,8 @@ function App() {
         isModalVisible={isGuessModalVisible}
         setIsModalVisible={setIsGuessModalVisible}
         entropyScores={entropyScores}
+        setGuessIndex={setGuessIndex}
+        setPreviousGuesses={setPreviousGuesses}
       />}
     </div>
   );
