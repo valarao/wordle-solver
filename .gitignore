@@ -33,3 +33,10 @@ build/
 .vscode/
 
 **/.DS_Store
+
+### Deployment ###
+node_modules
+root
+package.json
+yarn.lock
+**/src/main/**/static/
