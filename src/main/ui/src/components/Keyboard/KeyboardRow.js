@@ -17,6 +17,7 @@ const KeyboardRow = ({
     setEntropyScores,
     setIsGuessModalVisible,
     setIsLoading,
+    setInvalidGuess,
 }) => {
     return (
         <div className='KeyboardRow'>
@@ -34,6 +35,7 @@ const KeyboardRow = ({
                     setIsGuessModalVisible={setIsGuessModalVisible}
                     setEntropyScores={setEntropyScores}
                     setIsLoading={setIsLoading}
+                    setInvalidGuess={setInvalidGuess}
                 />}
             {rowLetters.map(letter => <Key letter={letter} key={letter} userGuess={userGuess} setUserGuess={setUserGuess} />)}
             {isLastRow &&

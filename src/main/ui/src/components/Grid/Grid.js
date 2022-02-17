@@ -15,7 +15,6 @@ const renderRows = (userGuess, guessIndex, previousGuesses, wordCorrectness, set
             previousGuess={previousGuess}
             wordCorrectness={wordCorrectness}
             setWordCorrectness={setWordCorrectness}
-            guessIndex={guessIndex}
             rowIndex={currentAttempt}
         />);
     }

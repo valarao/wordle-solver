@@ -13,7 +13,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [guessIndex, setGuessIndex] = useState(0);
   const [previousGuesses, setPreviousGuesses] = useState([]);
-  const [userGuess, setUserGuess] = useState("");
+  const [userGuess, setUserGuess] = useState('');
+  const [invalidGuess, setInvalidGuess] = useState('');
   const [entropyScores, setEntropyScores] = useState(null);
   const [recommendation, setRecommendation] = useState('RAISE');
   const [isGuessModalVisible, setIsGuessModalVisible] = useState(false);
@@ -32,13 +33,10 @@ function App() {
       } else if (keyCode === 13 && userGuess.length === WORD_LENGTH) {
         if (guessIndex < NUMBER_OF_ATTEMPTS - 1) {
           const guessWords = [...previousGuesses, userGuess];
-          setGuessIndex(guessIndex + 1);
-          setPreviousGuesses(guessWords);
-
           const newWordCorrectness = {...wordCorrectness};
           newWordCorrectness.previous = [...newWordCorrectness.previous, [...wordCorrectness.current]]
           newWordCorrectness.current = [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG];
-          setWordCorrectness(newWordCorrectness);
+          // setWordCorrectness(newWordCorrectness);
 
           const requestGuesses = [];
           for (let i = 0; i < guessWords.length; i++) {
@@ -48,7 +46,7 @@ function App() {
             });
           }
 
-          getTopWord(requestGuesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible);
+          getTopWord(requestGuesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible, setGuessIndex, setPreviousGuesses, guessIndex, guessWords, setInvalidGuess, setWordCorrectness, newWordCorrectness);
         } else {
           setGuessIndex(0);
           setPreviousGuesses([]);
@@ -66,7 +64,6 @@ function App() {
       window.removeEventListener('keydown', handleUserKeyPress);
     };
   }, [handleUserKeyPress]);
-
   return (
     <div className="App">
       <div className="App-body">
@@ -74,7 +71,7 @@ function App() {
         {isLoading ?
         <Spinner />
         : <>
-        <Recommendation recommendation={recommendation} />
+        <Recommendation recommendation={recommendation} invalidGuess={invalidGuess} />
         <Grid
           userGuess={userGuess}
           guessIndex={guessIndex}
@@ -95,6 +92,7 @@ function App() {
           setEntropyScores={setEntropyScores}
           setIsGuessModalVisible={setIsGuessModalVisible}
           setIsLoading={setIsLoading}
+          setInvalidGuess={setInvalidGuess}
         />
         </>}
       </div>

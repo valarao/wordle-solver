@@ -16,19 +16,16 @@ const SolveKey = ({
     setEntropyScores,
     setIsGuessModalVisible,
     setIsLoading,
+    setInvalidGuess,
 }) => {    
     const handlePressSolveKey = () => {
         if (userGuess.length === WORD_LENGTH) {
             setUserGuess('');
             if (guessIndex < NUMBER_OF_ATTEMPTS - 1) {
                 const guessWords = [...previousGuesses, userGuess];
-                setGuessIndex(guessIndex + 1);
-                setPreviousGuesses(guessWords);
-      
                 const newWordCorrectness = {...wordCorrectness};
                 newWordCorrectness.previous = [...newWordCorrectness.previous, [...wordCorrectness.current]]
                 newWordCorrectness.current = [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG];
-                setWordCorrectness(newWordCorrectness);
       
                 const requestGuesses = [];
                 for (let i = 0; i < guessWords.length; i++) {
@@ -38,7 +35,7 @@ const SolveKey = ({
                   });
                 }
       
-                getTopWord(requestGuesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible);
+                getTopWord(requestGuesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible, setGuessIndex, setPreviousGuesses, guessIndex, guessWords, setInvalidGuess, setWordCorrectness, newWordCorrectness);
             } else {
                 setGuessIndex(0);
                 setPreviousGuesses([]);
