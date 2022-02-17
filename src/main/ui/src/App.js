@@ -49,6 +49,10 @@ function App() {
         } else {
           setGuessIndex(0);
           setPreviousGuesses([]);
+          setWordCorrectness({
+            previous: [],
+            current: [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG],
+          });
         }
         return '';
       } else {
