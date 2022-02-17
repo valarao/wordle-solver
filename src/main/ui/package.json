@@ -16,6 +16,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "buildAndCopy": "react-scripts build && node copyBuild.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
