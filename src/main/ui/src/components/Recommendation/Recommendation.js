@@ -1,7 +1,7 @@
 import './Recommendation.css';
 
 const Recommendation = ({recommendation}) => {
-    const displayString = recommendation === '' ? 'No more recommendations left!' : `Recommendation Guess: ${recommendation}`;
+    const displayString = recommendation === '' ? '' : `Recommendation Guess: ${recommendation}`;
 
     return (
         <div className='Recommendation'>

@@ -10,6 +10,8 @@ const Keyboard = ({
     wordCorrectness,
     setWordCorrectness,
     setRecommendation,
+    setIsGuessModalVisible,
+    setEntropyScores,
     setIsLoading,
 }) => {
     const KEYBOARD_LETTER_ROWS = [
@@ -18,7 +20,7 @@ const Keyboard = ({
         ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
     ]
 
-    const renderRows = (guessIndex, setGuessIndex, previousGuesses, setPreviousGuesses, userGuess, setUserGuess, wordCorrectness, setWordCorrectness, setRecommendation, setIsLoading) => {
+    const renderRows = (guessIndex, setGuessIndex, previousGuesses, setPreviousGuesses, userGuess, setUserGuess, wordCorrectness, setWordCorrectness, setRecommendation, setIsGuessModalVisible, setEntropyScores, setIsLoading) => {
         const rows = [];
 
         for (let rowIndex = 0; rowIndex < KEYBOARD_LETTER_ROWS.length; rowIndex += 1) {
@@ -35,6 +37,8 @@ const Keyboard = ({
                 wordCorrectness={wordCorrectness}
                 setWordCorrectness={setWordCorrectness}
                 setRecommendation={setRecommendation}
+                setIsGuessModalVisible={setIsGuessModalVisible}
+                setEntropyScores={setEntropyScores}
                 setIsLoading={setIsLoading}
             />);
         }
@@ -44,7 +48,7 @@ const Keyboard = ({
 
     return (
         <div className='Keyboard'>
-            {renderRows(guessIndex, setGuessIndex, previousGuesses, setPreviousGuesses, userGuess, setUserGuess, wordCorrectness, setWordCorrectness, setRecommendation, setIsLoading)}
+            {renderRows(guessIndex, setGuessIndex, previousGuesses, setPreviousGuesses, userGuess, setUserGuess, wordCorrectness, setWordCorrectness, setRecommendation, setIsGuessModalVisible, setEntropyScores, setIsLoading)}
         </div>
     );
 }

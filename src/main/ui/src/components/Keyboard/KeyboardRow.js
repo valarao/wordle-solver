@@ -14,6 +14,8 @@ const KeyboardRow = ({
     wordCorrectness,
     setWordCorrectness,
     setRecommendation,
+    setEntropyScores,
+    setIsGuessModalVisible,
     setIsLoading,
 }) => {
     return (
@@ -29,6 +31,8 @@ const KeyboardRow = ({
                     wordCorrectness={wordCorrectness}
                     setWordCorrectness={setWordCorrectness}
                     setRecommendation={setRecommendation}
+                    setIsGuessModalVisible={setIsGuessModalVisible}
+                    setEntropyScores={setEntropyScores}
                     setIsLoading={setIsLoading}
                 />}
             {rowLetters.map(letter => <Key letter={letter} key={letter} userGuess={userGuess} setUserGuess={setUserGuess} />)}

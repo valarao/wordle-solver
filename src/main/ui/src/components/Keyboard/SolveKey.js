@@ -13,6 +13,8 @@ const SolveKey = ({
     wordCorrectness,
     setWordCorrectness,
     setRecommendation,
+    setEntropyScores,
+    setIsGuessModalVisible,
     setIsLoading,
 }) => {    
     const handlePressSolveKey = () => {
@@ -36,7 +38,7 @@ const SolveKey = ({
                   });
                 }
       
-                getTopWord(requestGuesses, setRecommendation, setIsLoading);
+                getTopWord(requestGuesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible);
             } else {
                 setGuessIndex(0);
                 setPreviousGuesses([]);

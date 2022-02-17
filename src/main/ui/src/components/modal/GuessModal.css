@@ -1,0 +1,73 @@
+.Modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Modal-exit {
+    position: fixed;
+    right: 20px;
+    cursor: pointer;
+}
+
+.Modal-visible {
+    opacity: 1;
+    visibility: visible;
+    transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+    transform: scale(1.1);
+}
+
+.Modal-invisible {
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+    transform: scale(1.0);
+}
+
+.GuessModal-content {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #cdd9e5;
+    background-color: #373e47;
+    padding: 1rem 1.5rem;
+    width: max(15rem, 35vw);
+    height: 38vh;
+    border-radius: 0.5rem;
+}
+
+.GuessModal-guess {
+    color: lightgreen;
+    margin-bottom: 40px;
+}
+
+.GuessModal-otherguesses {
+    font-weight: normal;
+}
+
+.GuessModal-nomatches {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.GuessModal-reset {
+    align-items: center;
+    margin-top: 50px;
+}
+
+.GuessModal-resetbutton {
+    align-items: center;
+    font-weight: bold;
+    font-size: x-large;
+    padding: 20px;
+    background-color: black;
+    border: solid 1px black;
+    border-radius: 5%;
+    cursor: pointer;
+}
