@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getTopWord } from './actions/dataActions';
-import './App.css';
-// import Grid from './components/grid/Grid';
-import Header from './components/Header';
-import Keyboard from './components/keyboard/Keyboard';
-import GuessModal from './components/modal/GuessModal';
-import Recommendation from './components/recommendation/Recommendation';
-import Spinner from './components/spinner/Spinner';
+import { getTopWord } from 'actions/dataActions';
+import 'App.css';
+import Grid from 'components/grid/Grid';
+import Header from 'components/Header';
+import Keyboard from 'components/keyboard/Keyboard';
+import GuessModal from 'components/modal/GuessModal';
+import Recommendation from 'components/recommendation/Recommendation';
+import Spinner from 'components/spinner/Spinner';
 import { CORRECTNESS, NUMBER_OF_ATTEMPTS, WORD_LENGTH } from './util/constants';
 
 function App() {
@@ -74,13 +74,13 @@ function App() {
           recommendation={recommendation}
           invalidGuess={invalidGuess}
         />
-        {/* <Grid
+        <Grid
           userGuess={userGuess}
           guessIndex={guessIndex}
           previousGuesses={previousGuesses}
           wordCorrectness={wordCorrectness}
           setWordCorrectness={setWordCorrectness}
-        /> */}
+        />
         <Keyboard
           userGuess={userGuess}
           setUserGuess={setUserGuess}
