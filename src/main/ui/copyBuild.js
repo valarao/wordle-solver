@@ -4,6 +4,9 @@ const SOURCE_FOLDER = `${__dirname}/build`;
 const TARGET_FOLDER = `${__dirname}/../resources/static`;
 const SUBFOLDERS = ['', '/static', '/static/css', '/static/js'];
 
+/**
+ * Script to copy frontend build files to resources folder to be packaged with server application.
+ */
 SUBFOLDERS.forEach((subfolder) => {
     const sourceFolderPath = `${SOURCE_FOLDER}/${subfolder}`;
     const targetFolderPath = `${TARGET_FOLDER}/${subfolder}`;
@@ -19,5 +22,4 @@ SUBFOLDERS.forEach((subfolder) => {
             `${targetFolderPath}/${file}`,
             (err) => {  });
     });
-
 });
