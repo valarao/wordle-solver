@@ -4,6 +4,7 @@ import './App.css';
 import Grid from './components/grid/Grid';
 import Header from './components/Header';
 import Keyboard from './components/keyboard/Keyboard';
+import GuessModal from './components/modal/GuessModal';
 import Recommendation from './components/recommendation/Recommendation';
 import Spinner from './components/spinner/Spinner';
 import { CORRECTNESS, NUMBER_OF_ATTEMPTS, WORD_LENGTH } from './util/constants';
@@ -13,7 +14,9 @@ function App() {
   const [guessIndex, setGuessIndex] = useState(0);
   const [previousGuesses, setPreviousGuesses] = useState([]);
   const [userGuess, setUserGuess] = useState("");
+  const [entropyScores, setEntropyScores] = useState(null);
   const [recommendation, setRecommendation] = useState('RAISE');
+  const [isGuessModalVisible, setIsGuessModalVisible] = useState(false);
   const [wordCorrectness, setWordCorrectness] = useState({
     previous: [],
     current: [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG],
@@ -45,7 +48,7 @@ function App() {
             });
           }
 
-          getTopWord(requestGuesses, setRecommendation, setIsLoading);
+          getTopWord(requestGuesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible);
         } else {
           setGuessIndex(0);
           setPreviousGuesses([]);
@@ -89,10 +92,17 @@ function App() {
           wordCorrectness={wordCorrectness}
           setWordCorrectness={setWordCorrectness}
           setRecommendation={setRecommendation}
+          setEntropyScores={setEntropyScores}
+          setIsGuessModalVisible={setIsGuessModalVisible}
           setIsLoading={setIsLoading}
         />
         </>}
       </div>
+      {entropyScores && <GuessModal
+        isModalVisible={isGuessModalVisible}
+        setIsModalVisible={setIsGuessModalVisible}
+        entropyScores={entropyScores}
+      />}
     </div>
   );
 }

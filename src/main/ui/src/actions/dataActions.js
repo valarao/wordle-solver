@@ -1,4 +1,4 @@
-export const getTopWord = async (guesses, setRecommendation, setIsLoading) => {
+export const getTopWord = async (guesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible) => {
     try {
         setIsLoading(true);
         const response = await fetch('/api/scores', {
@@ -7,8 +7,14 @@ export const getTopWord = async (guesses, setRecommendation, setIsLoading) => {
             body: JSON.stringify({ guesses }),
         })
         const data = await response.json();
-        setRecommendation(data.topWord);
-        setIsLoading(false);
+        if (data.status !== 400) {
+            setEntropyScores(data);
+            setRecommendation(data.topWord);
+            setIsGuessModalVisible(true);
+            setIsLoading(false);
+        } else {
+            throw new Error("Invalid guess");
+        }
     } catch (error) {
         console.log(error);
         setIsLoading(false);
