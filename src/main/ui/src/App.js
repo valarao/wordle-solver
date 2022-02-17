@@ -36,7 +36,6 @@ function App() {
           const newWordCorrectness = {...wordCorrectness};
           newWordCorrectness.previous = [...newWordCorrectness.previous, [...wordCorrectness.current]]
           newWordCorrectness.current = [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG];
-          // setWordCorrectness(newWordCorrectness);
 
           const requestGuesses = [];
           for (let i = 0; i < guessWords.length; i++) {
