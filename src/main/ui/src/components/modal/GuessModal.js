@@ -24,7 +24,7 @@ const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
     const getOtherGuesses = () => {
         const { predictiveScores } = entropyScores;
         if (predictiveScores.length - 1 <= NUMBER_OF_ALT_RECOMMENDATIONS) {
-            return predictiveScores.join(', ');
+            return predictiveScores.slice(0, predictiveScores.length - 1).map(score => score.guessWord).join(', ');
         }
 
         const otherGuesses = [];
@@ -48,10 +48,9 @@ const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
     useEffect(() => {
         window.addEventListener('keydown', handleUserKeyPress);
         return () => {
-          window.removeEventListener('keydown', handleUserKeyPress);
+            window.removeEventListener('keydown', handleUserKeyPress);
         };
-      }, [handleUserKeyPress]);
-
+    }, [handleUserKeyPress]);
     return (
         <div className={classes}>
             <div className='GuessModal-content'>
@@ -65,7 +64,7 @@ const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
                         <h2 className='GuessModal-title'>Best Guess</h2>
                         <h1 className='GuessModal-guess'>{getBestGuess()}</h1>
                         {otherGuesses.length > 0 && <>
-                            <h2 className='GuessModal-subtitle'>Other Great Guesses</h2>
+                            <h2 className='GuessModal-subtitle'>Alternative Guesses</h2>
                             <h3 className='GuessModal-otherguesses'>{otherGuesses}</h3>
                         </>
                         }
@@ -74,11 +73,10 @@ const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
                         <h3 className='GuessModal-otherguesses'>Hope you solved the Wordle!</h3>
                         <div className='GuessModal-reset'>
                             <span className='GuessModal-resetbutton'>
-                            Reset Solver
+                                Reset Solver
                             </span>
-                            </div>
+                        </div>
                     </div>)}
-
             </div>
         </div>
     );
