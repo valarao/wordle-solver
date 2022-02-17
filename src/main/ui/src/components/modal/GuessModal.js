@@ -6,7 +6,13 @@ import { IconContext } from 'react-icons/lib';
 import { NUMBER_OF_ALT_RECOMMENDATIONS } from '../../util/constants';
 import { useCallback, useEffect } from 'react';
 
-const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
+const GuessModal = ({ 
+    isModalVisible,
+    setIsModalVisible,
+    entropyScores,
+    setGuessIndex,
+    setPreviousGuesses,
+}) => {
     const classes = classNames({
         'Modal': true,
         'Modal-visible': isModalVisible,
@@ -14,8 +20,10 @@ const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
     });
 
     const handleClickExit = useCallback(() => {
-        setIsModalVisible(false);
-    }, [setIsModalVisible]);
+        if (entropyScores.predictiveScores.length > 0) {
+            setIsModalVisible(false);
+        }
+    }, [setIsModalVisible, entropyScores.predictiveScores.length]);
 
     const getBestGuess = () => {
         return entropyScores.topWord;
@@ -45,20 +53,27 @@ const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
         }
     }, [handleClickExit]);
 
+    const resetSolver = () => {
+        setGuessIndex(0);
+        setPreviousGuesses([]);
+        setIsModalVisible(false);
+    }
+
     useEffect(() => {
         window.addEventListener('keydown', handleUserKeyPress);
         return () => {
             window.removeEventListener('keydown', handleUserKeyPress);
         };
     }, [handleUserKeyPress]);
+
     return (
         <div className={classes}>
             <div className='GuessModal-content'>
-                <div className='Modal-exit' onClick={handleClickExit}>
+                {entropyScores.predictiveScores.length > 0 && <div className='Modal-exit' onClick={handleClickExit}>
                     <IconContext.Provider value={{ size: 20 }}>
                         <AiOutlineCloseCircle />
                     </IconContext.Provider>
-                </div>
+                </div>}
                 {entropyScores.predictiveScores.length > 0 ?
                     <>
                         <h2 className='GuessModal-title'>Best Guess</h2>
@@ -71,7 +86,7 @@ const GuessModal = ({ isModalVisible, setIsModalVisible, entropyScores }) => {
                     </> : (<div>
                         <h2 className='GuessModal-title'>No Matches Found</h2>
                         <h3 className='GuessModal-otherguesses'>Hope you solved the Wordle!</h3>
-                        <div className='GuessModal-reset'>
+                        <div className='GuessModal-reset' onClick={resetSolver}>
                             <span className='GuessModal-resetbutton'>
                                 Reset Solver
                             </span>
