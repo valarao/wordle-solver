@@ -9,6 +9,7 @@ import org.springframework.core.serializer.support.SerializationFailedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Implementation of a CacheManager to retrieve pre-calculated values in a JSON format.
@@ -20,14 +21,21 @@ public class JSONCacheManager implements CacheManager {
     private ObjectMapper objectMapper;
 
     @NonNull
-    private String cacheFile;
+    private String fileName;
 
     @Override
     public CalculateInformationScoresResponse getScores() {
         try {
-            return objectMapper.readValue(new File(cacheFile), CalculateInformationScoresResponse.class);
-        } catch (IOException e) {
+            InputStream inputStream = getFileAsIOStream(fileName);
+            return objectMapper.readValue(inputStream, CalculateInformationScoresResponse.class);
+        } catch (Exception e) {
             throw new SerializationFailedException(e.getMessage());
         }
+    }
+
+    private InputStream getFileAsIOStream(final String fileName) {
+        return this.getClass()
+                .getClassLoader()
+                .getResourceAsStream(fileName);
     }
 }

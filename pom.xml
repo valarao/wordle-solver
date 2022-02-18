@@ -39,7 +39,7 @@
     </dependencies>
 
     <build>
-        <finalName>application</finalName>
+        <finalName>wordle-solver</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -1,6 +1,7 @@
 package com.valarao.wordlesolver.loader;
 
 import com.google.common.collect.ImmutableList;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.serializer.support.SerializationFailedException;
 
@@ -17,7 +18,7 @@ public class TextFileWordDatasetLoaderTest {
 
     @Test
     public void testLoad_Success() {
-        String file = new File("").getAbsoluteFile() + "/src/test/resources/data/words.txt";
+        String file = "data/words_test.txt";
         wordDatasetLoader = new TextFileWordDatasetLoader(file);
         List<String> actualWords = wordDatasetLoader.load();
         List<String> expectedWords = ImmutableList.of("BRICK", "GREEN", "DANCE", "RANTS");
@@ -25,6 +26,7 @@ public class TextFileWordDatasetLoaderTest {
     }
 
     @Test
+//    @Disabled
     public void testLoad_SerializationFailedException() {
         String file = "invalidFile";
         wordDatasetLoader = new TextFileWordDatasetLoader(file);
