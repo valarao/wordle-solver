@@ -62,8 +62,6 @@ public class AppConfig {
 
     @Bean(name = "fullWordDatasetLoader")
     public WordDatasetLoader fullWordDatasetLoader() {
-//        String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words_complete.txt";
-//        InputStream inputStream = getFileAsIOStream("data/words_complete.txt");
         return new TextFileWordDatasetLoader("data/words_complete.txt");
     }
 
@@ -85,8 +83,6 @@ public class AppConfig {
 
     @Bean
     public CacheManager cacheManager(ObjectMapper objectMapper) {
-//        String cacheFile = new File("").getAbsoluteFile() + "/src/main/resources/data/cachedScores.json";
-//        InputStream inputStream = getFileAsIOStream("data/cachedScores.json");
         return new JSONCacheManager(objectMapper, "data/cachedScores.json");
     }
 
