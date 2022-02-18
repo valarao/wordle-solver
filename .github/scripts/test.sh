@@ -1,0 +1,1 @@
+mvn -B test
