@@ -16,4 +16,4 @@ jobs:
           distribution: 'adopt'
 
       - name: Test with Maven
-        run: ./scripts/build.sh
+        run: git update-index --chmod=+x ./.github/scripts/test.sh && ./.github/scripts/test.sh
