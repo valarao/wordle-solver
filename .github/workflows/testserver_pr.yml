@@ -16,4 +16,4 @@ jobs:
           distribution: 'adopt'
 
       - name: Test with Maven
-        run: mvn -B test -Dskip.yarn
+        run: ./scripts/build.sh
