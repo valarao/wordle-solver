@@ -17,5 +17,5 @@ jobs:
 
       - name: Test with Maven
         run: |
-          chmod +x "${GITHUB_WORKSPACE}/.github/scripts/test.sh"
-          "${GITHUB_WORKSPACE}/.github/scripts/test.sh"
+          chmod +x "${GITHUB_WORKSPACE}/.github/scripts/build.sh"
+          "${GITHUB_WORKSPACE}/.github/scripts/build.sh"
