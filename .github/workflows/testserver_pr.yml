@@ -15,7 +15,7 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
 
-      - name: Test with Maven
+      - name: Run Maven tests
         run: |
-          chmod +x "${GITHUB_WORKSPACE}/.github/scripts/build.sh"
-          "${GITHUB_WORKSPACE}/.github/scripts/build.sh"
+          chmod +x "${GITHUB_WORKSPACE}/.github/scripts/test.sh"
+          "${GITHUB_WORKSPACE}/.github/scripts/test.sh"
