@@ -7,7 +7,7 @@ import Keyboard from './components/keyboard/Keyboard';
 import GuessModal from './components/modal/GuessModal';
 import Recommendation from './components/recommendation/Recommendation';
 import Spinner from './components/spinner/Spinner';
-import { CORRECTNESS, NUMBER_OF_ATTEMPTS, WORD_LENGTH } from './util/constants';
+import { CORRECTNESS, DEFAULT_RECOMMENDATION, NUMBER_OF_ATTEMPTS, WORD_LENGTH } from './util/constants';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +16,7 @@ function App() {
   const [userGuess, setUserGuess] = useState('');
   const [invalidGuess, setInvalidGuess] = useState('');
   const [entropyScores, setEntropyScores] = useState(null);
-  const [recommendation, setRecommendation] = useState('RAISE');
+  const [recommendation, setRecommendation] = useState(DEFAULT_RECOMMENDATION);
   const [isGuessModalVisible, setIsGuessModalVisible] = useState(false);
   const [wordCorrectness, setWordCorrectness] = useState({
     previous: [],
@@ -53,6 +53,7 @@ function App() {
             previous: [],
             current: [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG],
           });
+          setRecommendation(DEFAULT_RECOMMENDATION);
         }
         return '';
       } else {
@@ -108,6 +109,8 @@ function App() {
         entropyScores={entropyScores}
         setGuessIndex={setGuessIndex}
         setPreviousGuesses={setPreviousGuesses}
+        setRecommendation={setRecommendation}
+        setWordCorrectness={setWordCorrectness}
       />}
     </div>
   );

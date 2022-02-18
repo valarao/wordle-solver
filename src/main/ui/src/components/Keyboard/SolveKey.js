@@ -1,6 +1,6 @@
 import './Keyboard.css';
 
-import { WORD_LENGTH, NUMBER_OF_ATTEMPTS, CORRECTNESS } from '../../util/constants';
+import { WORD_LENGTH, NUMBER_OF_ATTEMPTS, CORRECTNESS, DEFAULT_RECOMMENDATION } from '../../util/constants';
 import { getTopWord } from '../../actions/dataActions';
 
 const SolveKey = ({
@@ -17,24 +17,24 @@ const SolveKey = ({
     setIsGuessModalVisible,
     setIsLoading,
     setInvalidGuess,
-}) => {    
+}) => {
     const handlePressSolveKey = () => {
         if (userGuess.length === WORD_LENGTH) {
             setUserGuess('');
             if (guessIndex < NUMBER_OF_ATTEMPTS - 1) {
                 const guessWords = [...previousGuesses, userGuess];
-                const newWordCorrectness = {...wordCorrectness};
+                const newWordCorrectness = { ...wordCorrectness };
                 newWordCorrectness.previous = [...newWordCorrectness.previous, [...wordCorrectness.current]]
                 newWordCorrectness.current = [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG];
-      
+
                 const requestGuesses = [];
                 for (let i = 0; i < guessWords.length; i++) {
-                  requestGuesses.push({
-                    guessWord: guessWords[i],
-                    wordCorrectness: newWordCorrectness.previous[i],
-                  });
+                    requestGuesses.push({
+                        guessWord: guessWords[i],
+                        wordCorrectness: newWordCorrectness.previous[i],
+                    });
                 }
-      
+
                 getTopWord(requestGuesses, setRecommendation, setEntropyScores, setIsLoading, setIsGuessModalVisible, setGuessIndex, setPreviousGuesses, guessIndex, guessWords, setInvalidGuess, setWordCorrectness, newWordCorrectness);
             } else {
                 setGuessIndex(0);
@@ -42,7 +42,8 @@ const SolveKey = ({
                 setWordCorrectness({
                     previous: [],
                     current: [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG],
-                  });
+                });
+                setRecommendation(DEFAULT_RECOMMENDATION);
             }
         } else {
             // TODO: Validate length is wrong 
