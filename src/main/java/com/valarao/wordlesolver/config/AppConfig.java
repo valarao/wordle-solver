@@ -55,8 +55,6 @@ public class AppConfig {
 
     @Bean(name = "reducedWordDatasetLoader")
     public WordDatasetLoader reducedWordDatasetLoader() {
-//        String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words.txt";
-//        InputStream inputStream = getFileAsIOStream("data/words.txt");
         return new TextFileWordDatasetLoader("data/words.txt");
     }
 

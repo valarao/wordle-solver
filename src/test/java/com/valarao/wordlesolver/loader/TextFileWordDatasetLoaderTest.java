@@ -1,11 +1,9 @@
 package com.valarao.wordlesolver.loader;
 
 import com.google.common.collect.ImmutableList;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.serializer.support.SerializationFailedException;
 
-import java.io.File;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,7 +24,6 @@ public class TextFileWordDatasetLoaderTest {
     }
 
     @Test
-//    @Disabled
     public void testLoad_SerializationFailedException() {
         String file = "invalidFile";
         wordDatasetLoader = new TextFileWordDatasetLoader(file);
