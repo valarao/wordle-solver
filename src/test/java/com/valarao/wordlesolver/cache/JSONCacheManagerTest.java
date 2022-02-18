@@ -3,11 +3,8 @@ package com.valarao.wordlesolver.cache;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.valarao.wordlesolver.model.CalculateInformationScoresResponse;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.serializer.support.SerializationFailedException;
-
-import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
