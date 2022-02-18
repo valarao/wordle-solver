@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,18 +53,16 @@ public class AppConfig {
 
     @Bean(name = "reducedWordDatasetLoader")
     public WordDatasetLoader reducedWordDatasetLoader() {
-        String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words.txt";
-        return new TextFileWordDatasetLoader(file);
+        return new TextFileWordDatasetLoader("data/words.txt");
     }
 
     @Bean(name = "fullWordDatasetLoader")
     public WordDatasetLoader fullWordDatasetLoader() {
-        String file = new File("").getAbsoluteFile() + "/src/main/resources/data/words_complete.txt";
-        return new TextFileWordDatasetLoader(file);
+        return new TextFileWordDatasetLoader("data/words_complete.txt");
     }
 
     @Bean(name = "fullWordDataset")
-    public Set<String> fullWordDataset(@Qualifier("fullWordDatasetLoader") WordDatasetLoader fullWordDatasetLoader) {
+    public Set<String> fullWordDataset(@Qualifier("fullWordDatasetLoader") WordDatasetLoader fullWordDatasetLoader) throws IOException {
         return new HashSet<>(fullWordDatasetLoader.load());
     }
 
@@ -81,8 +79,7 @@ public class AppConfig {
 
     @Bean
     public CacheManager cacheManager(ObjectMapper objectMapper) {
-        String cacheFile = new File("").getAbsoluteFile() + "/src/main/resources/data/cachedScores.json";
-        return new JSONCacheManager(objectMapper, cacheFile);
+        return new JSONCacheManager(objectMapper, "data/cachedScores.json");
     }
 
     @Bean

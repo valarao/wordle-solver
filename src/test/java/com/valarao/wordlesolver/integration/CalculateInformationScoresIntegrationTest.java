@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CalculateInformationScoresIntegrationTest {
-    private static final String WORDS_FILE = new File("").getAbsoluteFile() + "/src/main/resources/data/words.txt";
-    private static final String CACHED_FILE = new File("").getAbsoluteFile() + "/src/main/resources/data/cachedScores.json";
+    private static final String WORDS_FILE = "data/words.txt";
+    private static final String CACHED_FILE = "data/cachedScores.json";
     private static final int WORD_LENGTH = 5;
     private static final List<LetterCorrectness> CORRECTNESS_POSSIBILITIES = ImmutableList.of(
             LetterCorrectness.WRONG,

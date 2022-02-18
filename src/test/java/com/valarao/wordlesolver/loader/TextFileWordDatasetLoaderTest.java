@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.serializer.support.SerializationFailedException;
 
-import java.io.File;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -17,7 +16,7 @@ public class TextFileWordDatasetLoaderTest {
 
     @Test
     public void testLoad_Success() {
-        String file = new File("").getAbsoluteFile() + "/src/test/resources/data/words.txt";
+        String file = "data/words_test.txt";
         wordDatasetLoader = new TextFileWordDatasetLoader(file);
         List<String> actualWords = wordDatasetLoader.load();
         List<String> expectedWords = ImmutableList.of("BRICK", "GREEN", "DANCE", "RANTS");

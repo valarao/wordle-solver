@@ -1,5 +1,6 @@
 package com.valarao.wordlesolver.loader;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
