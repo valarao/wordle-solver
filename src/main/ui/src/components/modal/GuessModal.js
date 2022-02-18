@@ -3,7 +3,7 @@ import { AiOutlineCloseCircle } from 'react-icons/ai';
 import './GuessModal.css';
 import classNames from 'classnames';
 import { IconContext } from 'react-icons/lib';
-import { NUMBER_OF_ALT_RECOMMENDATIONS } from '../../util/constants';
+import { CORRECTNESS, DEFAULT_RECOMMENDATION, NUMBER_OF_ALT_RECOMMENDATIONS } from '../../util/constants';
 import { useCallback, useEffect } from 'react';
 
 const GuessModal = ({ 
@@ -12,6 +12,8 @@ const GuessModal = ({
     entropyScores,
     setGuessIndex,
     setPreviousGuesses,
+    setRecommendation,
+    setWordCorrectness,
 }) => {
     const classes = classNames({
         'Modal': true,
@@ -56,6 +58,11 @@ const GuessModal = ({
     const resetSolver = () => {
         setGuessIndex(0);
         setPreviousGuesses([]);
+        setRecommendation(DEFAULT_RECOMMENDATION);
+        setWordCorrectness({
+            previous: [],
+            current: [CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG, CORRECTNESS.WRONG],
+          });
         setIsModalVisible(false);
     }
 
