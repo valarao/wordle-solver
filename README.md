@@ -13,7 +13,7 @@
   <h3 align="center">Wordle Solver</h3>
 
   <p align="center">
-    Get a a little Wordle help using information theory.
+    Get a little Wordle help using information theory.
     <br />
     <a href="https://github.com/valarao/wordle-solver/tree/main/docs"><strong>Explore the docs »</strong></a>
     <br />
