@@ -77,7 +77,7 @@ You can also build the project, run the executable `.jar` file, and view the bun
 
 1. Build locally
    ```sh
-   mvn clean install && java -jar target/wordle-solver-0.0.1-SNAPSHOT.jar
+   mvn clean install && java -jar target/wordle-solver.jar
    ```
 2. Preview client on `localhost:5000` 
 
@@ -87,7 +87,7 @@ Alternatively, you can quick-preview the frontend client separately.
 
 1. Build locally
    ```sh
-   mvn clean install && java -jar target/wordle-solver-0.0.1-SNAPSHOT.jar
+   mvn clean install && java -jar target/wordle-solver.jar
    ```
 2. Navigate directly into client folder
    ```sh
