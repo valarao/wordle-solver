@@ -26,7 +26,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Wordle has taken over the world (or at least the first 5-15 minutes of my mornings). Inspired by [3Blue1Brown](https://www.youtube.com/watch?v=v68zYyaEmEA)'s video about information theory, we can learn how to make better guesses by studying how the Wordle Solver "thinks". Using the Wordle Solver can tell us:
+Wordle has taken over the world (or at least the first 5-15 minutes of my mornings). Inspired by [3Blue1Brown](https://www.youtube.com/watch?v=v68zYyaEmEA)'s video about information theory, I believe we can learn to make better guesses by studying how the Wordle Solver "thinks" (similar to the way Chess players study games played against computers). Using the Wordle Solver can tell us:
 - What are the best starting words?
 - What word should I pick to narrow down my options given the words guessed so far?
 - What are common prefixes and suffixes that fit word validation constraints?
