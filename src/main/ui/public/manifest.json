@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Wordle Solver",
+  "name": "Solve Wordle with Information Theory",
   "icons": [
     {
       "src": "favicon.ico",
