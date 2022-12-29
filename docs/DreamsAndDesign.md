@@ -33,7 +33,7 @@ Despite my desires to prove I have **willpower** and improve my **Wordle** perfo
 - "This is too much effort for what it's worth"
 - "I should conserve my energy before I get busier"
 
-Thankfully, I'm also aware of my strong desire to perform well at **work**. In a month, I'm going to start my full-time software engineering career. I'm framing this project for myself not as a way to understand *tangential concepts* but as a way to improve *direct on-the-job skills*. Such directness will come from using a tech stack that is common in large enterprise applications.
+Thankfully, I'm also aware of my strong desire to perform well at **work**. I'm framing this project for myself not as a way to understand *tangential concepts* but as a way to improve *direct on-the-job skills*. Such directness will come from using a tech stack that is common in large enterprise applications.
 
 **Key idea**: Rationalizing this project as a way to further my career should counterbalance my rationalization to quit :)
 
